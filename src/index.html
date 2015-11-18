@@ -7,11 +7,13 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js'>
+    </script>
     <script src="js/main.js"></script>
     <title>Your Moving Companion</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body onload="ko.applyBindings(new ViewModel())">
     <div class="container">
         <div id="search-bar" class="row">
             <div class="col-md-12">
@@ -20,9 +22,13 @@
         </div>
         <div class="row">
             <div class="col-md-2">
-                <ul>
-                    <li>Place 1</li>
-                    <li>Place 2</li>
+                <h1 class="place-category-heading">Schools</h1>
+                <ul class="schools-list" data-bind="foreach: schools">
+                    <li data-bind="text: name"></li>
+                </ul>
+                <h1 class="place-category-heading">Restaurants</h1>
+                <ul class="restaurants-list" data-bind="foreach: restaurants">
+                    <li data-bind="text: name"></li>
                 </ul>
             </div>
             <div class="col-md-10">
