@@ -21,13 +21,9 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-2">
-                <h1 class="place-category-heading">Schools</h1>
-                <ul class="schools-list" data-bind="foreach: schools">
-                    <li data-bind="text: name"></li>
-                </ul>
-                <h1 class="place-category-heading">Restaurants</h1>
-                <ul class="restaurants-list" data-bind="foreach: restaurants">
+            <div class="col-md-2" data-bind="foreach: categories">
+                <h1 class="place-category-heading" data-bind="text: $data"></h1>
+                <ul class="schools-list" data-bind="foreach: $parent.places()[$data]">
                     <li data-bind="text: name"></li>
                 </ul>
             </div>

@@ -29,96 +29,93 @@ function Restaurant(data) {
 }
 Restaurant.prototype = Object.create(PointOfInterest.prototype);
 
-var schoolData = [
-    {
-        'name': 'Chestnut Grove Academy',
-        'address': '45 Chestnut Grove, London SW12 8JZ',
-        'url': 'http://www.chestnutgrove.wandsworth.sch.uk/',
-        'level' : ['Secondary'],
-        'gender' : 'Mixed',
-        'kind' :  'Academy',
-        'faith' : 'inter/non-denominational'
+var places = {
+    'schools' : {
+        'constructor': School,
+        'list': [{
+                'name': 'Chestnut Grove Academy',
+                'address': '45 Chestnut Grove, London SW12 8JZ',
+                'url': 'http://www.chestnutgrove.wandsworth.sch.uk/',
+                'level' : ['Secondary'],
+                'gender' : 'Mixed',
+                'kind' :  'Academy',
+                'faith' : 'inter/non-denominational'
+            }, {
+                'name': 'London Steiner School',
+                'address': '9 Weir Road, London SW12 0LT',
+                'url': 'http://waldorflondon.co.uk/',
+                'level' : ['Primary', 'Secondary'],
+                'gender' : 'Mixed',
+                'kind' :  'Independent',
+                'faith' : 'inter/non-denominational',
+            }, {
+                'name': 'Oak Lodge School',
+                'address': '101 Nightingale Lane, London SW12 8NA',
+                'url': 'http://www.oaklodge.wandsworth.sch.uk',
+                'level' : ['Secondary'],
+                'gender' : 'Mixed',
+                'kind' :  'Independent',
+                'faith' : 'inter/non-denominational'
+            }, {
+                'name': 'Ernest Bevin',
+                'address': 'Beechcroft Road, Tooting, London, SW17 7DF',
+                'url': 'http://www.ernestbevin.org.uk/',
+                'level' : ['Secondary'],
+                'gender' : 'boys',
+                'kind' :  'Academy',
+                'faith' : 'inter/non-denominational',
+            }, {
+                'name': 'St Francis Xavier (SFX) 6th Form College',
+                'address': '10 Malwood Road, London SW12 8EN',
+                'url': 'http://www.sfx.ac.uk/',
+                'level' : 'College',
+                'gender' : 'Mixed',
+                'kind' :  'College',
+                'faith' : 'Roman Catholic',
+            }]
     },
-    {
-        'name': 'London Steiner School',
-        'address': '9 Weir Road, London SW12 0LT',
-        'url': 'http://waldorflondon.co.uk/',
-        'level' : ['Primary', 'Secondary'],
-        'gender' : 'Mixed',
-        'kind' :  'Independent',
-        'faith' : 'inter/non-denominational',
-    },
-    {
-        'name': 'Oak Lodge School',
-        'address': '101 Nightingale Lane, London SW12 8NA',
-        'url': 'http://www.oaklodge.wandsworth.sch.uk',
-        'level' : ['Secondary'],
-        'gender' : 'Mixed',
-        'kind' :  'Independent',
-        'faith' : 'inter/non-denominational'
-    },
-    {
-        'name': 'Ernest Bevin',
-        'address': 'Beechcroft Road, Tooting, London, SW17 7DF',
-        'url': 'http://www.ernestbevin.org.uk/',
-        'level' : ['Secondary'],
-        'gender' : 'boys',
-        'kind' :  'Academy',
-        'faith' : 'inter/non-denominational',
-    },
-    {
-        'name': 'St Francis Xavier (SFX) 6th Form College',
-        'address': '10 Malwood Road, London SW12 8EN',
-        'url': 'http://www.sfx.ac.uk/',
-        'level' : 'College',
-        'gender' : 'Mixed',
-        'kind' :  'College',
-        'faith' : 'Roman Catholic',
-    }];
-
-var restaurantData = [{
-    'name': 'Lamberts',
-    'address':'2 Station Parade, Balham High Rd, London SW12 9AZ',
-    'url': 'http://www.lambertsrestaurant.com/',
-    'foodType': 'British'
-    },
-    {
-    'name': 'Gurkhas Diner',
-    'address':'1 The Boulevard, London SW17 7BW',
-    'url': 'http://www.gurkhasdiner.co.uk/',
-    'foodType': 'Nepalese'
-    },
-    {
-    'name': 'The Honest Italian',
-    'address':'3 Balham Station Rd, London SW12 9AZ',
-    'url': 'http://thehonestitalian.com/',
-    'foodType': 'Italian'
-    },
-    {
-    'name': 'Chez Bruce',
-    'address':'2 Bellevue Rd, Wandsworth Common, London SW17 7EG',
-    'url': 'http://www.chezbruce.co.uk/',
-    'foodType': 'French'
-
-    },
-    {
-    'name': 'The Georgian',
-    'address':'27 Balham Hill, London SW12 9DX',
-    'url': 'http://www.georgianrestaurant.co.uk/',
-    'foodType': 'Georgian'
-}];
+    'restaurants': {
+        'constructor': School,
+        'list': [{
+                'name': 'Lamberts',
+                'address':'2 Station Parade, Balham High Rd, London SW12 9AZ',
+                'url': 'http://www.lambertsrestaurant.com/',
+                'foodType': 'British'
+            }, {
+                'name': 'Gurkhas Diner',
+                'address':'1 The Boulevard, London SW17 7BW',
+                'url': 'http://www.gurkhasdiner.co.uk/',
+                'foodType': 'Nepalese'
+            }, {
+                'name': 'The Honest Italian',
+                'address':'3 Balham Station Rd, London SW12 9AZ',
+                'url': 'http://thehonestitalian.com/',
+                'foodType': 'Italian'
+            }, {
+                'name': 'Chez Bruce',
+                'address':'2 Bellevue Rd, Wandsworth Common, London SW17 7EG',
+                'url': 'http://www.chezbruce.co.uk/',
+                'foodType': 'French'
+            }, {
+                'name': 'The Georgian',
+                'address':'27 Balham Hill, London SW12 9DX',
+                'url': 'http://www.georgianrestaurant.co.uk/',
+                'foodType': 'Georgian'
+            }]
+    }
+};
 
 var ViewModel = function () {
     var self = this;
-    self.schools = ko.observableArray([]);
-    schoolData.forEach(function(s) {
-        self.schools.push(ko.observable(new School(s)));
+    self.places = ko.observable({});
+    Object.keys(places).forEach(function(k) {
+        self.places()[k] = ko.observableArray([]);
+        var constructor = places[k].constructor;
+        places[k].list.forEach(function(p) {
+            self.places()[k].push(ko.observable(new constructor(p)));
+        });
     });
-    self.restaurants = ko.observableArray([]);
-    restaurantData.forEach(function(r) {
-        self.restaurants.push(ko.observable(new Restaurant(r)));
-    });
-
+    self.categories = ko.observable(Object.keys(places));
 };
 
 
