@@ -115,7 +115,7 @@ var ViewModel = function () {
             self.places()[k].push(ko.observable(new constructor(p)));
         });
     });
-    self.categories = ko.observable(Object.keys(places));
+    self.categories = ko.observable(Object.keys(places).sort());
 };
 
 
