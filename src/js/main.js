@@ -32,6 +32,7 @@ Restaurant.prototype = Object.create(PointOfInterest.prototype);
 var places = {
     'schools' : {
         'constructor': School,
+        'label': 'Schools',
         'list': [{
                 'name': 'Chestnut Grove Academy',
                 'address': '45 Chestnut Grove, London SW12 8JZ',
@@ -75,7 +76,8 @@ var places = {
             }]
     },
     'restaurants': {
-        'constructor': School,
+        'constructor': Restaurant,
+        'label': 'Restaurants',
         'list': [{
                 'name': 'Lamberts',
                 'address':'2 Station Parade, Balham High Rd, London SW12 9AZ',
@@ -107,18 +109,23 @@ var places = {
 
 var ViewModel = function () {
     var self = this;
+    self.filter= ko.observable("");
+    self.categories = ko.observable(Object.keys(places).sort());
     self.places = ko.observable({});
-    Object.keys(places).forEach(function(k) {
+    self.categories().forEach(function(k) {
         self.places()[k] = ko.observableArray([]);
         var constructor = places[k].constructor;
         places[k].list.forEach(function(p) {
             self.places()[k].push(ko.observable(new constructor(p)));
         });
     });
-    self.categories = ko.observable(Object.keys(places).sort());
-};
-
-
-
-
-
+    self.selectedPlaces = ko.observable({});
+    self.categories().forEach(function(k) {
+        self.selectedPlaces()[k] = ko.computed(function() {
+            var filter = self.filter().toLowerCase();
+            return ko.utils.arrayFilter(self.places()[k](), function(p) {
+                return p().name().toLowerCase().indexOf(filter) >= 0;
+            });
+        })
+    });
+}

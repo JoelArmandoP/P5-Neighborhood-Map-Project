@@ -18,12 +18,13 @@
         <div id="search-bar" class="row">
             <div class="col-md-12">
                 <h1>Search</h1>
+                <input type="text" name="search-place" data-bind="value:filter, valueUpdate: 'afterkeydown'">
             </div>
         </div>
         <div class="row">
             <div class="col-md-2" data-bind="foreach: categories">
                 <h1 class="place-category-heading" data-bind="text: $data"></h1>
-                <ul class="schools-list" data-bind="foreach: $parent.places()[$data]">
+                <ul class="places-list" data-bind="foreach: $parent.selectedPlaces()[$data]">
                     <li data-bind="text: name"></li>
                 </ul>
             </div>
