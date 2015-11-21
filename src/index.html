@@ -9,6 +9,8 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js'>
     </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFoI4Tv2fTEgRhBSWn9UtWsJX2_J2-DLg">
+    </script>
     <script src="js/main.js"></script>
     <title>Your Moving Companion</title>
     <link rel="stylesheet" href="css/style.css">
@@ -29,13 +31,10 @@
                 </ul>
             </div>
             <div class="col-md-10">
-                <div id="map">
+                <div class="map" data-bind="map: location">
                 </div>
             </div>
         </div>
     </div>
-    <script async defer
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFoI4Tv2fTEgRhBSWn9UtWsJX2_J2-DLg&callback=initMap">
-    </script>
 </body>
 </html>

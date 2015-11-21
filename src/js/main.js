@@ -1,12 +1,4 @@
 'use strict';
-function initMap() {
-  // Create a map object and specify the DOM element for display.
-  var map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 51.442645, lng: -0.152782},
-    scrollwheel: false,
-    zoom: 13
-  });
-}
 
 function PointOfInterest(data) {
     this.name = ko.observable(data.name);
@@ -107,6 +99,25 @@ var places = {
     }
 };
 
+// Custom binding for maps.
+ko.bindingHandlers.map = {
+    update: function (elem, valueAccesor, allBindingsAccesor, viewModel) {
+        var location = ko.utils.unwrapObservable(valueAccesor());
+        var latLng = new google.maps.LatLng(
+            ko.utils.unwrapObservable(location.lat),
+            ko.utils.unwrapObservable(location.lng));
+        var mapOptions = {
+            center: latLng,
+            scrollwheel: false,
+            zoom: 13
+        };
+        console.log(elem);
+        console.log(mapOptions);
+        console.log(google.maps.Map);
+        new google.maps.Map(elem, mapOptions);
+    }
+};
+
 var ViewModel = function () {
     var self = this;
     self.filter= ko.observable("");
@@ -128,4 +139,8 @@ var ViewModel = function () {
             });
         })
     });
+
+    self.location = ko.observable({
+        lat: ko.observable(51.442645),
+        lng: ko.observable(-0.152782)});
 }
