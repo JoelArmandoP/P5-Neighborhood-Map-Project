@@ -1,11 +1,12 @@
 'use strict';
-
+// Constructor for PointOfInterest
 function PointOfInterest(data) {
     this.name = ko.observable(data.name);
     this.address = ko.observable(data.address);
     this.url = ko.observable(data.url);
 }
 
+// Constructor for Schools
 function School(data) {
     PointOfInterest.call(this, data);
     this.level = ko.observable(data.level);
@@ -15,6 +16,7 @@ function School(data) {
 }
 School.prototype = Object.create(PointOfInterest.prototype);
 
+// Constructor for Restaurantes
 function Restaurant(data) {
     PointOfInterest.call(this, data);
     this.foodType = ko.observable(data.foodType);
