@@ -6,10 +6,11 @@ function PointOfInterest(data) {
     self.address = ko.observable(data.address);
     self.url = ko.observable(data.url);
     // Look up address in geocoder API
+    self.location = ko.observable({});
     var geocoder = new google.maps.Geocoder();
     geocoder.geocode({'address': self.address()}, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
-            self.location = ko.observable(results[0].geometry.location);
+            self.location(results[0].geometry.location);
         }
     });
 }
@@ -121,7 +122,18 @@ ko.bindingHandlers.map = {
             scrollwheel: false,
             zoom: 13
         };
-        new google.maps.Map(elem, mapOptions);
+        var map = new google.maps.Map(elem, mapOptions);
+
+        viewModel.categories().forEach(function(k) {
+            viewModel.selectedPlaces()[k]().forEach(function(p) {
+                console.log(p());
+                var marker = new google.maps.Marker({
+                    position: p().location(),
+                    map: map,
+                    title: p().name()
+                });
+            })
+        });
     }
 };
 
