@@ -1,9 +1,17 @@
 'use strict';
 // Constructor for PointOfInterest
 function PointOfInterest(data) {
-    this.name = ko.observable(data.name);
-    this.address = ko.observable(data.address);
-    this.url = ko.observable(data.url);
+    var self = this;
+    self.name = ko.observable(data.name);
+    self.address = ko.observable(data.address);
+    self.url = ko.observable(data.url);
+    // Look up address in geocoder API
+    var geocoder = new google.maps.Geocoder();
+    geocoder.geocode({'address': self.address()}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+            self.location = ko.observable(results[0].geometry.location);
+        }
+    });
 }
 
 // Constructor for Schools
@@ -113,9 +121,6 @@ ko.bindingHandlers.map = {
             scrollwheel: false,
             zoom: 13
         };
-        console.log(elem);
-        console.log(mapOptions);
-        console.log(google.maps.Map);
         new google.maps.Map(elem, mapOptions);
     }
 };
