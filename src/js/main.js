@@ -120,8 +120,11 @@ ko.bindingHandlers.map = {
 
 var ViewModel = function () {
     var self = this;
+    // Only places that contain the text in self.filter will be displayed.
     self.filter= ko.observable("");
+    // Alphabetically sorted list of all categories in the JSON.
     self.categories = ko.observable(Object.keys(places).sort());
+    // All places in the JSON by category
     self.places = ko.observable({});
     self.categories().forEach(function(k) {
         self.places()[k] = ko.observableArray([]);
@@ -130,6 +133,7 @@ var ViewModel = function () {
             self.places()[k].push(ko.observable(new constructor(p)));
         });
     });
+    // Places by category filtered by self.filter
     self.selectedPlaces = ko.observable({});
     self.categories().forEach(function(k) {
         self.selectedPlaces()[k] = ko.computed(function() {
@@ -139,7 +143,7 @@ var ViewModel = function () {
             });
         })
     });
-
+    // Coordinates where to center the map
     self.location = ko.observable({
         lat: ko.observable(51.442645),
         lng: ko.observable(-0.152782)});
