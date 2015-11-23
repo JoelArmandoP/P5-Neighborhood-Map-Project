@@ -15,6 +15,10 @@ function PointOfInterest(data) {
     });
 }
 
+PointOfInterest.prototype.setMapLabel = function(label) {
+    this.label = ko.observable(label);
+}
+
 // Constructor for Schools
 function School(data) {
     PointOfInterest.call(this, data);
@@ -126,11 +130,11 @@ ko.bindingHandlers.map = {
 
         viewModel.categories().forEach(function(k) {
             viewModel.selectedPlaces()[k]().forEach(function(p) {
-                console.log(p());
                 var marker = new google.maps.Marker({
                     position: p().location(),
                     map: map,
-                    title: p().name()
+                    title: p().name(),
+                    label: p().label()
                 });
             })
         });
@@ -139,6 +143,9 @@ ko.bindingHandlers.map = {
 
 var ViewModel = function () {
     var self = this;
+    // Labels to identify markers in the map
+    var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var labelIndex = 0;
     // Only places that contain the text in self.filter will be displayed.
     self.filter= ko.observable("");
     // Alphabetically sorted list of all categories in the JSON.
@@ -149,7 +156,9 @@ var ViewModel = function () {
         self.places()[k] = ko.observableArray([]);
         var constructor = places[k].constructor;
         places[k].list.forEach(function(p) {
-            self.places()[k].push(ko.observable(new constructor(p)));
+            var place = new constructor(p);
+            place.setMapLabel(labels[labelIndex++ % labels.length]);
+            self.places()[k].push(ko.observable(place));
         });
     });
     // Places by category filtered by self.filter

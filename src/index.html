@@ -27,7 +27,9 @@
             <div class="col-md-2" data-bind="foreach: categories">
                 <h1 class="place-category-heading" data-bind="text: $data"></h1>
                 <ul class="places-list" data-bind="foreach: $parent.selectedPlaces()[$data]">
-                    <li data-bind="text: name"></li>
+                    <li><span class="map-label" data-bind="text:label"></span>
+                        <span class="place-name" data-bind="text: name"></span>
+                    </li>
                 </ul>
             </div>
             <div class="col-md-10">
