@@ -130,12 +130,15 @@ ko.bindingHandlers.map = {
 
         viewModel.categories().forEach(function(k) {
             viewModel.selectedPlaces()[k]().forEach(function(p) {
-                var marker = new google.maps.Marker({
-                    position: p().location(),
-                    map: map,
-                    title: p().name(),
-                    label: p().label()
-                });
+                console.log(p().location());
+                if('lat' in p().location()) {
+                    var marker = new google.maps.Marker({
+                        position: p().location(),
+                        map: map,
+                        title: p().name(),
+                        label: p().label()
+                    });
+                }
             })
         });
     }
