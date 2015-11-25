@@ -19,6 +19,12 @@ PointOfInterest.prototype.setMapLabel = function(label) {
     this.label = ko.observable(label);
 }
 
+PointOfInterest.prototype.infoWindowData = function() {
+    return '<div class="name">' + this.name() + '</div>'+
+        '<div class="address">' + this.address() + '</div>'+
+        '<div class="url"><a href="' + this.url() + '">'+ this.url() +'</a></div>';
+}
+
 // Constructor for Schools
 function School(data) {
     PointOfInterest.call(this, data);
@@ -29,12 +35,25 @@ function School(data) {
 }
 School.prototype = Object.create(PointOfInterest.prototype);
 
+School.prototype.infoWindowData = function() {
+    return Object.getPrototypeOf(School.prototype).infoWindowData.call(this) +
+    '<div class="level">' + this.level() + '</div>'+
+        '<div class="gender">' + this.gender() + '</div>'+
+        '<div class="kind">' + this.kind() +'</div>' +
+        '<div class="faith">' + this.faith() +'</div>';
+}
+
 // Constructor for Restaurantes
 function Restaurant(data) {
     PointOfInterest.call(this, data);
     this.foodType = ko.observable(data.foodType);
 }
 Restaurant.prototype = Object.create(PointOfInterest.prototype);
+
+Restaurant.prototype.infoWindowData = function() {
+    return Object.getPrototypeOf(Restaurant.prototype).infoWindowData.call(this) +
+    '<div class="food-type">' + this.foodType() +'</div>';
+}
 
 var places = {
     'schools' : {
@@ -130,13 +149,22 @@ ko.bindingHandlers.map = {
 
         viewModel.categories().forEach(function(k) {
             viewModel.selectedPlaces()[k]().forEach(function(p) {
-                console.log(p().location());
                 if('lat' in p().location()) {
                     var marker = new google.maps.Marker({
                         position: p().location(),
                         map: map,
                         title: p().name(),
                         label: p().label()
+                    });
+                    /* infoWindows are the little helper windows that open when you click
+                    or hover over a pin on a map. They usually contain more information
+                    about a location. */
+                    var infoWindow = new google.maps.InfoWindow({
+                        content: '<div class="maps-info-window">'+ p().infoWindowData() + '</div>'
+                    });
+                    // Opens an infowindow when a map marker is clicked
+                    google.maps.event.addListener(marker, 'click', function() {
+                        infoWindow.open(map, marker);
                     });
                 }
             })
