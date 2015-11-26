@@ -45,14 +45,34 @@ School.prototype.infoWindowData = function() {
 
 // Constructor for Restaurantes
 function Restaurant(data) {
-    PointOfInterest.call(this, data);
-    this.foodType = ko.observable(data.foodType);
+    var self = this;
+    PointOfInterest.call(self, data);
+    self.foodType = ko.observable(data.foodType);
+    self.zagatId = ko.observable('');
+    $.getJSON('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location='+ self.location().lat + ',' +
+                 self.location.lng + '&radius=1&key=AIzaSyAFoI4Tv2fTEgRhBSWn9UtWsJX2_J2-DLg', function(data) {
+        self.zagatId(data.results[0].place_id);
+        });
+
+    self.zagatRating = ko.observable('none');
+    $.getJSON('https://maps.googleapis.com/maps/api/place/details/json?callback=&placeid='+ self.zagatId() + '&key=AIzaSyAFoI4Tv2fTEgRhBSWn9UtWsJX2_J2-DLg', function(data) {
+        var totalRating = 0;
+        var countRating = 0;
+        data.result.reviews.forEach(function (r) {
+            totalRating += r.rating;
+            countRating++;
+        });
+        if(countRating > 0) {
+            self.zagatRating(totalRating/countRating);    
+        }
+    });
 }
 Restaurant.prototype = Object.create(PointOfInterest.prototype);
 
 Restaurant.prototype.infoWindowData = function() {
     return Object.getPrototypeOf(Restaurant.prototype).infoWindowData.call(this) +
-    '<div class="food-type">' + this.foodType() +'</div>';
+    '<div class="food-type">' + this.foodType() +'</div>' +
+    '<div class="zagat-rating">' + this.zagatRating() +'</div>';
 }
 
 var places = {
