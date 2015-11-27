@@ -20,9 +20,9 @@ PointOfInterest.prototype.setMapLabel = function(label) {
 }
 
 PointOfInterest.prototype.infoWindowData = function() {
-    return '<div class="name">' + this.name() + '</div>'+
-        '<div class="address">' + this.address() + '</div>'+
-        '<div class="url"><a href="' + this.url() + '">'+ this.url() +'</a></div>';
+    return '<div class="name" data-bind="text: name"></div>' +
+        '<div class="address" data-bind="text: address"></div>'+
+        '<div class="url"><a data-bind="attr: { href: url }, text: url"></a></div>';
 }
 
 // Constructor for Schools
@@ -37,10 +37,10 @@ School.prototype = Object.create(PointOfInterest.prototype);
 
 School.prototype.infoWindowData = function() {
     return Object.getPrototypeOf(School.prototype).infoWindowData.call(this) +
-    '<div class="level">' + this.level() + '</div>'+
-        '<div class="gender">' + this.gender() + '</div>'+
-        '<div class="kind">' + this.kind() +'</div>' +
-        '<div class="faith">' + this.faith() +'</div>';
+    '<div class="level" data-bind="text: level"></div>'+
+        '<div class="gender" data-bind="text: gender"></div>'+
+        '<div class="kind" data-bind="text: kind"></div>' +
+        '<div class="faith" data-bind="text: faith"></div>';
 }
 
 // Constructor for Restaurantes
@@ -71,8 +71,8 @@ Restaurant.prototype = Object.create(PointOfInterest.prototype);
 
 Restaurant.prototype.infoWindowData = function() {
     return Object.getPrototypeOf(Restaurant.prototype).infoWindowData.call(this) +
-    '<div class="food-type">' + this.foodType() +'</div>' +
-    '<div class="zagat-rating">' + this.zagatRating() +'</div>';
+    '<div class="food-type" data-bind="text: foodType"></div>' +
+    '<div class="zagat-rating" data-bind="text: zagatRating"></div>';
 }
 
 var places = {
@@ -163,7 +163,7 @@ ko.bindingHandlers.map = {
         var mapOptions = {
             center: latLng,
             scrollwheel: false,
-            zoom: 13
+            zoom: 15
         };
         var map = new google.maps.Map(elem, mapOptions);
 
@@ -179,8 +179,10 @@ ko.bindingHandlers.map = {
                     /* infoWindows are the little helper windows that open when you click
                     or hover over a pin on a map. They usually contain more information
                     about a location. */
+                    var content = $.parseHTML('<div class="maps-info-window">'+ p().infoWindowData() + '</div>')[0];
+                    ko.applyBindings(p, content);
                     var infoWindow = new google.maps.InfoWindow({
-                        content: '<div class="maps-info-window">'+ p().infoWindowData() + '</div>'
+                        content: content
                     });
                     // Opens an infowindow when a map marker is clicked
                     google.maps.event.addListener(marker, 'click', function() {
