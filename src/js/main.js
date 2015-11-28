@@ -1,4 +1,10 @@
 'use strict';
+
+// Google places service
+var placesService = null;
+var mapsGeocoder = null; 
+
+
 // Constructor for PointOfInterest
 function PointOfInterest(data) {
     var self = this;
@@ -7,11 +13,25 @@ function PointOfInterest(data) {
     self.url = ko.observable(data.url);
     // Look up address in geocoder API
     self.location = ko.observable({});
-    var geocoder = new google.maps.Geocoder();
-    geocoder.geocode({'address': self.address()}, function(results, status) {
+    mapsGeocoder.geocode({'address': self.address()}, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
             self.location(results[0].geometry.location);
         }
+    });
+    self.placesInfo = ko.observable({});
+    ko.computed(function(){
+        if ('lat' in self.location()) {
+            var request = {
+                location: self.location(),
+                radius: '1',
+                name: self.name()
+            };
+            placesService.nearbySearch(request, function(results, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    self.placesInfo(results[0]);
+                }
+            });
+        };
     });
 }
 
@@ -43,36 +63,21 @@ School.prototype.infoWindowData = function() {
         '<div class="faith" data-bind="text: faith"></div>';
 }
 
-// Constructor for Restaurantes
+// Constructor for Restaurants
 function Restaurant(data) {
     var self = this;
     PointOfInterest.call(self, data);
     self.foodType = ko.observable(data.foodType);
-    self.zagatId = ko.observable('');
-    $.getJSON('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location='+ self.location().lat + ',' +
-                 self.location.lng + '&radius=1&key=AIzaSyAFoI4Tv2fTEgRhBSWn9UtWsJX2_J2-DLg', function(data) {
-        self.zagatId(data.results[0].place_id);
-        });
-
-    self.zagatRating = ko.observable('none');
-    $.getJSON('https://maps.googleapis.com/maps/api/place/details/json?callback=&placeid='+ self.zagatId() + '&key=AIzaSyAFoI4Tv2fTEgRhBSWn9UtWsJX2_J2-DLg', function(data) {
-        var totalRating = 0;
-        var countRating = 0;
-        data.result.reviews.forEach(function (r) {
-            totalRating += r.rating;
-            countRating++;
-        });
-        if(countRating > 0) {
-            self.zagatRating(totalRating/countRating);    
-        }
+    self.rating = ko.computed(function() {
+        return 'rating' in self.placesInfo() ? self.placesInfo().rating : 'none';
     });
 }
 Restaurant.prototype = Object.create(PointOfInterest.prototype);
 
 Restaurant.prototype.infoWindowData = function() {
-    return Object.getPrototypeOf(Restaurant.prototype).infoWindowData.call(this) +
+    return Object.getPrototypeOf(Restaurant.prototype).infoWindowData(this) +
     '<div class="food-type" data-bind="text: foodType"></div>' +
-    '<div class="zagat-rating" data-bind="text: zagatRating"></div>';
+    '<div class="rating" data-bind="text: rating"></div>';
 }
 
 var places = {
@@ -229,3 +234,11 @@ var ViewModel = function () {
         lat: ko.observable(51.442645),
         lng: ko.observable(-0.152782)});
 }
+
+
+// Get the page running!
+window.addEventListener('load', function () {
+    placesService = new google.maps.places.PlacesService(document.getElementById('places-attribution'));
+    mapsGeocoder = new google.maps.Geocoder();
+    ko.applyBindings(new ViewModel());
+});

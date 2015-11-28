@@ -7,15 +7,13 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js'>
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFoI4Tv2fTEgRhBSWn9UtWsJX2_J2-DLg">
-    </script>
+    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js'></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFoI4Tv2fTEgRhBSWn9UtWsJX2_J2-DLg&libraries=places"></script>
     <script src="js/main.js"></script>
     <title>Your Moving Companion</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body onload="ko.applyBindings(new ViewModel())">
+<body>
     <div class="container">
         <div id="search-bar" class="row">
             <div class="col-md-12">
@@ -34,6 +32,8 @@
             </div>
             <div class="col-md-10">
                 <div class="map" data-bind="map: location">
+                </div>
+                <div id="places-attribution">
                 </div>
             </div>
         </div>
