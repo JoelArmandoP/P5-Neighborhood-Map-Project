@@ -4,6 +4,20 @@
 var placesService = null;
 var mapsGeocoder = null; 
 
+// We may be doing too many requests in one go.
+// Wrapper function to retry API call after delay on specific status.
+function callApiWithRetry(apiFunction, request, callback, retryOn) {
+    var attempt = 0;
+    var f = function (result, status) {
+        if (status == retryOn && attempt++ < 3) {
+            console.log("retry #" + attempt + ": " + request);
+            setTimeout(function() { apiFunction(request, f); }, 2000);
+        } else {
+            callback(result, status);
+        }
+    };
+    apiFunction(request, f);
+}
 
 // Constructor for PointOfInterest
 function PointOfInterest(data) {
@@ -13,11 +27,15 @@ function PointOfInterest(data) {
     self.url = ko.observable(data.url);
     // Look up address in geocoder API
     self.location = ko.observable({});
-    mapsGeocoder.geocode({'address': self.address()}, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-            self.location(results[0].geometry.location);
-        }
-    });
+    callApiWithRetry(
+        mapsGeocoder.geocode.bind(mapsGeocoder),
+        { 'address': self.address() },
+        function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                self.location(results[0].geometry.location);
+            }
+        },
+        google.maps.GeocoderStatus.OVER_QUERY_LIMIT);
     self.placesInfo = ko.observable({});
     ko.computed(function(){
         if ('lat' in self.location()) {
@@ -26,13 +44,36 @@ function PointOfInterest(data) {
                 radius: '1',
                 name: self.name()
             };
-            placesService.nearbySearch(request, function(results, status) {
-                if (status == google.maps.places.PlacesServiceStatus.OK) {
-                    self.placesInfo(results[0]);
-                }
-            });
+            callApiWithRetry(
+                placesService.nearbySearch.bind(placesService), request,
+                function(results, status) {
+                    console.log("Place:" + status + " for " + self.name());
+                    if (status == google.maps.places.PlacesServiceStatus.OK) {
+                        self.placesInfo(results[0]);
+                        console.log(results[0]);
+                    }
+                },
+                google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT);
         };
     });
+    self.placesDetails = ko.observable({});
+    ko.computed(function(){
+        if ('place_id' in self.placesInfo()) {
+            var request = {
+                placeId: self.placesInfo().place_id
+            };
+            callApiWithRetry(
+                placesService.getDetails.bind(placesService), request,
+                function(place, status) {
+                    if (status == google.maps.places.PlacesServiceStatus.OK) {
+                        self.placesDetails(place);
+                        console.log(place);
+                    }
+                },
+                google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT);
+        };
+    });
+
 }
 
 PointOfInterest.prototype.setMapLabel = function(label) {
