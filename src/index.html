@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="container">
+    <div id="container" class="container">
         <div id="search-bar" class="row">
             <div class="col-md-12">
                 <h1>Search</h1>
@@ -36,6 +36,37 @@
                 <div id="places-attribution">
                 </div>
             </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="wikipedia-container">
+                    <h3 id="wiki-element"> About Balham</h3>
+                    <ul id="wikipedia-links"  data-bind="foreach: wikiArticles">
+                        <li>
+                        <h5 id="wiki-article-title" data-bind="text:title"></h5>
+                        <span id="wiki-snippet" data-bind="text:snippet"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="display:none">
+        <div id="school-info-window-template" class="info-window-container">
+            <div><span class="data-label maki-commerical-building"> </span><span class="data" data-bind="text: name"></span></div>
+            <div><span class="data-label fontawesome-map-marker"> </span><span class="address" data-bind="text: address"></span></div>
+            <div><span class="data-label fontawesome-globe"> </span><span class="url"><a data-bind="attr: { href: url }, text: url"></a></span></div>
+            <div><span class="data-label">Level: </span><span class="level" data-bind="text: level"></span></div>
+            <div><span class="data-label">Gender: </span><span class="gender" data-bind="text: gender"></span></div>
+            <!--<div><span class="data-label">Kind: </span><span class="kind" data-bind="text: kind"></span></div> -->
+            <div><span class="data-label">Faith: </span><pan class="faith" data-bind="text: faith"></pan></div>
+        </div>
+        <div id="restaurant-info-window-template" class="info-window-container">
+            <div><span class="data-label fontawesome-food"> </span><span class="name" data-bind="text: name"></span></div>
+            <div><span class="data-label fontawesome-map-marker"> </span><span class="address" data-bind="text: address"></span></div>
+            <div><span class="data-label  fontawesome-globe"> </span><span class="url"><a data-bind="attr: { href: url }, text: url"></a></span></div>
+            <div><span class="data-label">Food: </span><span class="food-type" data-bind="text: foodType"></span></div>
+            <div><span class="data-label">Rating: </span><span class="rating" data-bind="text: rating"></span></div>
         </div>
     </div>
 </body>

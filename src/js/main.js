@@ -10,7 +10,6 @@ function callApiWithRetry(apiFunction, request, callback, retryOn) {
     var attempt = 0;
     var f = function (result, status) {
         if (status == retryOn && attempt++ < 3) {
-            console.log("retry #" + attempt + ": " + request);
             setTimeout(function() { apiFunction(request, f); }, 2000);
         } else {
             callback(result, status);
@@ -47,10 +46,8 @@ function PointOfInterest(data) {
             callApiWithRetry(
                 placesService.nearbySearch.bind(placesService), request,
                 function(results, status) {
-                    console.log("Place:" + status + " for " + self.name());
                     if (status == google.maps.places.PlacesServiceStatus.OK) {
                         self.placesInfo(results[0]);
-                        console.log(results[0]);
                     }
                 },
                 google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT);
@@ -67,7 +64,6 @@ function PointOfInterest(data) {
                 function(place, status) {
                     if (status == google.maps.places.PlacesServiceStatus.OK) {
                         self.placesDetails(place);
-                        console.log(place);
                     }
                 },
                 google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT);
@@ -80,12 +76,6 @@ PointOfInterest.prototype.setMapLabel = function(label) {
     this.label = ko.observable(label);
 }
 
-PointOfInterest.prototype.infoWindowData = function() {
-    return '<div class="name" data-bind="text: name"></div>' +
-        '<div class="address" data-bind="text: address"></div>'+
-        '<div class="url"><a data-bind="attr: { href: url }, text: url"></a></div>';
-}
-
 // Constructor for Schools
 function School(data) {
     PointOfInterest.call(this, data);
@@ -95,14 +85,7 @@ function School(data) {
     this.faith = ko.observable(data.faith);
 }
 School.prototype = Object.create(PointOfInterest.prototype);
-
-School.prototype.infoWindowData = function() {
-    return Object.getPrototypeOf(School.prototype).infoWindowData.call(this) +
-    '<div class="level" data-bind="text: level"></div>'+
-        '<div class="gender" data-bind="text: gender"></div>'+
-        '<div class="kind" data-bind="text: kind"></div>' +
-        '<div class="faith" data-bind="text: faith"></div>';
-}
+School.prototype.infoWindowTemplateId = 'school-info-window-template';
 
 // Constructor for Restaurants
 function Restaurant(data) {
@@ -114,13 +97,16 @@ function Restaurant(data) {
     });
 }
 Restaurant.prototype = Object.create(PointOfInterest.prototype);
+Restaurant.prototype.infoWindowTemplateId = 'restaurant-info-window-template';
 
-Restaurant.prototype.infoWindowData = function() {
-    return Object.getPrototypeOf(Restaurant.prototype).infoWindowData(this) +
-    '<div class="food-type" data-bind="text: foodType"></div>' +
-    '<div class="rating" data-bind="text: rating"></div>';
+// Constructor for Wikipedia articles
+function WikiArticle(title, snippet) {
+    this.title = ko.observable(title);
+    this.snippet = ko.observable(snippet);
+    this.url = ko.observable('https://en.wikipedia.org/wiki/' + title);
 }
 
+// JSON  places
 var places = {
     'schools' : {
         'constructor': School,
@@ -225,7 +211,7 @@ ko.bindingHandlers.map = {
                     /* infoWindows are the little helper windows that open when you click
                     or hover over a pin on a map. They usually contain more information
                     about a location. */
-                    var content = $.parseHTML('<div class="maps-info-window">'+ p().infoWindowData() + '</div>')[0];
+                    var content = document.getElementById(p().infoWindowTemplateId).cloneNode(true);
                     ko.applyBindings(p, content);
                     var infoWindow = new google.maps.InfoWindow({
                         content: content
@@ -277,12 +263,30 @@ var ViewModel = function () {
     self.location = ko.observable({
         lat: ko.observable(51.442645),
         lng: ko.observable(-0.152782)});
+    // Array of Wikipedia articles
+    self.wikiArticles = ko.observableArray([]);
+
+    var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=Balham,London&prop=revisions&rvprop=content&srlimit=5&format=json';
+
+    $.ajax(wikiUrl, {
+        dataType: 'jsonp',
+        headers: { 'Api-User-Agent': 'Joels Udacity Test Page/1.0' },
+        success: function(data, textStatus, jqXHR) {
+            $.each(data.query.search, function(index, item) {
+                var article = new WikiArticle(item.title, item.snippet.replace(/<\/?[^>]+(>|$)/g, ""));
+                self.wikiArticles.push(ko.observable(article));
+            });
+        }
+    });
+
 }
+
+
 
 
 // Get the page running!
 window.addEventListener('load', function () {
     placesService = new google.maps.places.PlacesService(document.getElementById('places-attribution'));
     mapsGeocoder = new google.maps.Geocoder();
-    ko.applyBindings(new ViewModel());
+    ko.applyBindings(new ViewModel(), document.getElementById('container'));
 });

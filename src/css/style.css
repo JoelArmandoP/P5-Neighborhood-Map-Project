@@ -1,3 +1,14 @@
+@import url(http://weloveiconfonts.com/api/?family=fontawesome|maki);
+
+/* fontawesome */
+[class*="fontawesome-"]:before {
+  font-family: 'FontAwesome', sans-serif;
+}
+/* maki */
+[class*="maki-"]:before {
+  font-family: 'maki', sans-serif;
+}
+
 .container {
         max-width: 1024px;
 }
@@ -8,5 +19,8 @@ body {
 
 .map {
     height: 100vh;
+}
 
+.data-label {
+	font-weight: bold;
 }
