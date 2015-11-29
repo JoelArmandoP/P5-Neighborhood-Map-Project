@@ -40,11 +40,24 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="wikipedia-container">
-                    <h3 id="wiki-element"> About Balham</h3>
+                    <h3 id="wiki-header"> About Balham</h3>
                     <ul id="wikipedia-links"  data-bind="foreach: wikiArticles">
                         <li>
                         <h5 id="wiki-article-title" data-bind="text:title"></h5>
                         <span id="wiki-snippet" data-bind="text:snippet"></span>
+                        <span class="url"><a data-bind="attr: { href: url }, text: url"></a></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="theGuardian-container">
+                    <h3 id="News-header">Balham in the news</h3>
+                    <ul id="News-links"  data-bind="foreach: theGuardianArticles">
+                        <li>
+                        <h5 class="url"><a data-bind="attr: { href: url }, text: title"></a></span>
                         </li>
                     </ul>
                 </div>
