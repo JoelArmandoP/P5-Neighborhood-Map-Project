@@ -23,59 +23,14 @@ function PointOfInterest(data) {
     var self = this;
     self.data = ko.observable(data);
     self.name = ko.computed(function () { return 'name' in self.data() ? self.data().name : ''; });
-    self.address = ko.computed(function () { return 'address' in self.data() ? self.data().address : ''; });
+    self.address = ko.computed(function () { return 'formatted_address' in self.data() ? self.data().formatted_address : ''; });
     self.url = ko.computed(function () { return 'url' in self.data() ? self.data().url : ''; });
-    // Look up address in geocoder API
-    self.location = ko.observable({});
-    callApiWithRetry(
-        mapsGeocoder.geocode.bind(mapsGeocoder),
-        { 'address': self.address() },
-        function(results, status) {
-            if (status == google.maps.GeocoderStatus.OK) {
-                self.location(results[0].geometry.location);
-            }
-        },
-        google.maps.GeocoderStatus.OVER_QUERY_LIMIT);
-    self.placesInfo = ko.observable({});
-    ko.computed(function(){
-        if ('lat' in self.location()) {
-            var request = {
-                location: self.location(),
-                radius: '1',
-                name: self.name()
-            };
-            callApiWithRetry(
-                placesService.nearbySearch.bind(placesService), request,
-                function(results, status) {
-                    if (status == google.maps.places.PlacesServiceStatus.OK) {
-                        self.placesInfo(results[0]);
-                    }
-                },
-                google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT);
-        };
-    });
-    self.placesDetails = ko.observable({});
-    ko.computed(function(){
-        if ('place_id' in self.placesInfo()) {
-            var request = {
-                placeId: self.placesInfo().place_id
-            };
-            callApiWithRetry(
-                placesService.getDetails.bind(placesService), request,
-                function(place, status) {
-                    if (status == google.maps.places.PlacesServiceStatus.OK) {
-                        self.placesDetails(place);
-                    }
-                },
-                google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT);
-        };
-    });
-
+    self.location = ko.computed(function () { return 'geometry' in self.data() ? self.data().geometry.location : null; });
 }
-
 PointOfInterest.prototype.setMapLabel = function(label) {
     this.label = ko.observable(label);
 }
+PointOfInterest.prototype.category = "Place";
 
 // Constructor for Schools
 function School(data) {
@@ -88,16 +43,18 @@ function School(data) {
 }
 School.prototype = Object.create(PointOfInterest.prototype);
 School.prototype.infoWindowTemplateId = 'school-info-window-template';
+School.prototype.category = "School";
 
 // Constructor for Restaurants
 function Restaurant(data) {
     var self = this;
     PointOfInterest.call(self, data);
     self.foodType = ko.computed(function () { return 'foodType' in self.data() ? self.data().foodType : ''; });
-    self.rating = ko.computed(function() { return 'rating' in self.placesInfo() ? self.placesInfo().rating : 'none'; });
+    self.rating = ko.computed(function() { return 'rating' in self.data() ? self.data().rating : 'none'; });
 }
 Restaurant.prototype = Object.create(PointOfInterest.prototype);
 Restaurant.prototype.infoWindowTemplateId = 'restaurant-info-window-template';
+Restaurant.prototype.category = "Restaurant";
 
 // Constructor for Wikipedia articles
 function WikiArticle(item) {
@@ -117,84 +74,6 @@ function theGuardianArticle(item) {
     this.url = ko.computed(function () { return 'webUrl' in self.data() ? self.data().webUrl : ''; });
 }
 
-// JSON  places
-var places = {
-    'schools' : {
-        'constructor': School,
-        'label': 'Schools',
-        'list': [{
-                'name': 'Chestnut Grove Academy',
-                'address': '45 Chestnut Grove, London SW12 8JZ',
-                'url': 'http://www.chestnutgrove.wandsworth.sch.uk/',
-                'level' : ['Secondary'],
-                'gender' : 'Mixed',
-                'kind' :  'Academy',
-                'faith' : 'inter/non-denominational'
-            }, {
-                'name': 'London Steiner School',
-                'address': '9 Weir Road, London SW12 0LT',
-                'url': 'http://waldorflondon.co.uk/',
-                'level' : ['Primary', 'Secondary'],
-                'gender' : 'Mixed',
-                'kind' :  'Independent',
-                'faith' : 'inter/non-denominational',
-            }, {
-                'name': 'Oak Lodge School',
-                'address': '101 Nightingale Lane, London SW12 8NA',
-                'url': 'http://www.oaklodge.wandsworth.sch.uk',
-                'level' : ['Secondary'],
-                'gender' : 'Mixed',
-                'kind' :  'Independent',
-                'faith' : 'inter/non-denominational'
-            }, {
-                'name': 'Ernest Bevin',
-                'address': 'Beechcroft Road, Tooting, London, SW17 7DF',
-                'url': 'http://www.ernestbevin.org.uk/',
-                'level' : ['Secondary'],
-                'gender' : 'boys',
-                'kind' :  'Academy',
-                'faith' : 'inter/non-denominational',
-            }, {
-                'name': 'St Francis Xavier (SFX) 6th Form College',
-                'address': '10 Malwood Road, London SW12 8EN',
-                'url': 'http://www.sfx.ac.uk/',
-                'level' : 'College',
-                'gender' : 'Mixed',
-                'kind' :  'College',
-                'faith' : 'Roman Catholic',
-            }]
-    },
-    'restaurants': {
-        'constructor': Restaurant,
-        'label': 'Restaurants',
-        'list': [{
-                'name': 'Lamberts',
-                'address':'2 Station Parade, Balham High Rd, London SW12 9AZ',
-                'url': 'http://www.lambertsrestaurant.com/',
-                'foodType': 'British'
-            }, {
-                'name': 'Gurkhas Diner',
-                'address':'1 The Boulevard, London SW17 7BW',
-                'url': 'http://www.gurkhasdiner.co.uk/',
-                'foodType': 'Nepalese'
-            }, {
-                'name': 'The Honest Italian',
-                'address':'3 Balham Station Rd, London SW12 9AZ',
-                'url': 'http://thehonestitalian.com/',
-                'foodType': 'Italian'
-            }, {
-                'name': 'Chez Bruce',
-                'address':'2 Bellevue Rd, Wandsworth Common, London SW17 7EG',
-                'url': 'http://www.chezbruce.co.uk/',
-                'foodType': 'French'
-            }, {
-                'name': 'The Georgian',
-                'address':'27 Balham Hill, London SW12 9DX',
-                'url': 'http://www.georgianrestaurant.co.uk/',
-                'foodType': 'Georgian'
-            }]
-    }
-};
 
 // Custom binding for maps.
 ko.bindingHandlers.map = {
@@ -243,23 +122,70 @@ ko.bindingHandlers.map = {
 var ViewModel = function () {
     var self = this;
     // Labels to identify markers in the map
+    // Coordinates where to center the map
+    self.location = ko.observable({
+        lat: ko.observable(51.442645),
+        lng: ko.observable(-0.152782)});
+
     var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     var labelIndex = 0;
+    // Dictionary of place types to constructor
+    var placeTypes = {
+        cafe: Restaurant,
+        restaurant: Restaurant,
+        bar: Restaurant,
+        school: School
+    }
+
+    // All places to display, by category
+    var places = {};
+    Object.keys(placeTypes).forEach(function (k) { places[new placeTypes[k]({}).category] = ko.observableArray([]); });
+    self.places = ko.observable(places);
+
+    // Get a list of relevant places from Google Places
+    callApiWithRetry(
+        placesService.radarSearch.bind(placesService), {
+            location: { lat: self.location().lat(), lng: self.location().lng() },
+            radius: 2000,
+            types: Object.keys(placeTypes)
+        },
+        function(results, status) {
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                // Got list of places! Get details for each
+                $.each(results, function (index, item) {
+                    callApiWithRetry(
+                        placesService.getDetails.bind(placesService), {
+                            placeId: item.place_id
+                        },
+                        function(result, status) {
+                            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                                // Got details for a place
+                                // Instantiate and add to category
+                                var type = null;
+                                $.each(result.types, function (i, t) {
+                                    if (type === null && t in placeTypes) {
+                                        type = t;
+                                    }
+                                });
+                                if (type !== null) {
+                                    var place = new placeTypes[type](result);
+                                    place.setMapLabel(labels[labelIndex++ % labels.length]);
+                                    self.places()[place.category].push(ko.observable(place));
+                                }
+                            }
+                        },
+                        google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT);
+                });
+            }
+        },
+        google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT);
+
+    // Alphabetically sorted list of all categories found.
+    self.categories = ko.observable(Object.keys(self.places()).sort());
+
     // Only places that contain the text in self.filter will be displayed.
-    self.filter= ko.observable("");
-    // Alphabetically sorted list of all categories in the JSON.
-    self.categories = ko.observable(Object.keys(places).sort());
-    // All places in the JSON by category
-    self.places = ko.observable({});
-    self.categories().forEach(function(k) {
-        self.places()[k] = ko.observableArray([]);
-        var constructor = places[k].constructor;
-        places[k].list.forEach(function(p) {
-            var place = new constructor(p);
-            place.setMapLabel(labels[labelIndex++ % labels.length]);
-            self.places()[k].push(ko.observable(place));
-        });
-    });
+    self.filter = ko.observable("");
+
     // Places by category filtered by self.filter
     self.selectedPlaces = ko.observable({});
     self.categories().forEach(function(k) {
@@ -270,10 +196,7 @@ var ViewModel = function () {
             });
         })
     });
-    // Coordinates where to center the map
-    self.location = ko.observable({
-        lat: ko.observable(51.442645),
-        lng: ko.observable(-0.152782)});
+ 
     // Array of Wikipedia articles
     self.wikiArticles = ko.observableArray([]);
     var maxArticles = 3;
