@@ -276,6 +276,7 @@ var ViewModel = function () {
         lng: ko.observable(-0.152782)});
     // Array of Wikipedia articles
     self.wikiArticles = ko.observableArray([]);
+    var maxArticles = 3;
     // End point for Wikipedia
     var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=Balham,London&prop=revisions&rvprop=content&srlimit=5&format=json';
     // Do the query to Wikipedia
@@ -284,7 +285,9 @@ var ViewModel = function () {
         headers: { 'Api-User-Agent': 'Joels Udacity Test Page/1.0' },
         success: function(data, textStatus, jqXHR) {
             $.each(data.query.search, function(index, item) {
-                self.wikiArticles.push(ko.observable(new WikiArticle(item)));
+                if (self.wikiArticles().length < maxArticles) {
+                    self.wikiArticles.push(ko.observable(new WikiArticle(item)));
+                }
             });
         }
     });
@@ -299,7 +302,9 @@ var ViewModel = function () {
         dataType: 'jsonp',
         success: function(data, textStatus, jqXHR) {
             $.each(data.response.results, function(index, item) {
-                self.theGuardianArticles.push(ko.observable(new theGuardianArticle(item)));
+                if (self.theGuardianArticles().length < maxArticles) {
+                    self.theGuardianArticles.push(ko.observable(new theGuardianArticle(item)));    
+                }
             })
         }
 
