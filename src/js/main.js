@@ -21,9 +21,10 @@ function callApiWithRetry(apiFunction, request, callback, retryOn) {
 // Constructor for PointOfInterest
 function PointOfInterest(data) {
     var self = this;
-    self.name = ko.observable(data.name);
-    self.address = ko.observable(data.address);
-    self.url = ko.observable(data.url);
+    self.data = ko.observable(data);
+    self.name = ko.computed(function () { return 'name' in self.data() ? self.data().name : ''; });
+    self.address = ko.computed(function () { return 'address' in self.data() ? self.data().address : ''; });
+    self.url = ko.computed(function () { return 'url' in self.data() ? self.data().url : ''; });
     // Look up address in geocoder API
     self.location = ko.observable({});
     callApiWithRetry(
@@ -78,11 +79,12 @@ PointOfInterest.prototype.setMapLabel = function(label) {
 
 // Constructor for Schools
 function School(data) {
-    PointOfInterest.call(this, data);
-    this.level = ko.observable(data.level);
-    this.gender = ko.observable(data.gender);
-    this.kind = ko.observable(data.kind);
-    this.faith = ko.observable(data.faith);
+    var self = this;
+    PointOfInterest.call(self, data);
+    self.level = ko.computed(function () { return 'level' in self.data() ? self.data().level : ''; });
+    self.gender = ko.computed(function () { return 'gender' in self.data() ? self.data().gender : ''; });
+    self.kind = ko.computed(function () { return 'kind' in self.data() ? self.data().kind : ''; });
+    self.faith = ko.computed(function () { return 'faith' in self.data() ? self.data().faith : ''; });
 }
 School.prototype = Object.create(PointOfInterest.prototype);
 School.prototype.infoWindowTemplateId = 'school-info-window-template';
@@ -91,26 +93,28 @@ School.prototype.infoWindowTemplateId = 'school-info-window-template';
 function Restaurant(data) {
     var self = this;
     PointOfInterest.call(self, data);
-    self.foodType = ko.observable(data.foodType);
-    self.rating = ko.computed(function() {
-        return 'rating' in self.placesInfo() ? self.placesInfo().rating : 'none';
-    });
+    self.foodType = ko.computed(function () { return 'foodType' in self.data() ? self.data().foodType : ''; });
+    self.rating = ko.computed(function() { return 'rating' in self.placesInfo() ? self.placesInfo().rating : 'none'; });
 }
 Restaurant.prototype = Object.create(PointOfInterest.prototype);
 Restaurant.prototype.infoWindowTemplateId = 'restaurant-info-window-template';
 
 // Constructor for Wikipedia articles
-function WikiArticle(title, snippet) {
-    this.title = ko.observable(title);
-    this.snippet = ko.observable(snippet);
-    this.url = ko.observable('https://en.wikipedia.org/wiki/' + title);
+function WikiArticle(item) {
+    var self = this;
+    self.data = ko.observable(item);
+    this.title = ko.computed(function () { return 'title' in self.data() ? self.data().title : 'Untitled'; });
+    this.snippet = ko.computed(function () { return 'snippet' in self.data() ? self.data().snippet.replace(/<\/?[^>]+(>|$)/g, "") : ''; });
+    this.url = ko.computed(function () { return 'title' in self.data() ? 'https://en.wikipedia.org/wiki/' + self.data().title : ''; });
 }
 
 // Constructor for The Guardian articles
 
-function theGuardianArticle(title, url) {
-    this.title = ko.observable(title);
-    this.url = ko.observable(url);
+function theGuardianArticle(item) {
+    var self = this;
+    self.data = ko.observable(item);
+    this.title = ko.computed(function () { return 'webTitle' in self.data() ? self.data().webTitle : 'Untitled'; });
+    this.url = ko.computed(function () { return 'webUrl' in self.data() ? self.data().webUrl : ''; });
 }
 
 // JSON  places
@@ -280,8 +284,7 @@ var ViewModel = function () {
         headers: { 'Api-User-Agent': 'Joels Udacity Test Page/1.0' },
         success: function(data, textStatus, jqXHR) {
             $.each(data.query.search, function(index, item) {
-                var article = new WikiArticle(item.title, item.snippet.replace(/<\/?[^>]+(>|$)/g, ""));
-                self.wikiArticles.push(ko.observable(article));
+                self.wikiArticles.push(ko.observable(new WikiArticle(item)));
             });
         }
     });
@@ -296,8 +299,7 @@ var ViewModel = function () {
         dataType: 'jsonp',
         success: function(data, textStatus, jqXHR) {
             $.each(data.response.results, function(index, item) {
-                var article = new theGuardianArticle(item.webTitle, item.webUrl);
-                self.theGuardianArticles.push(ko.observable(article));
+                self.theGuardianArticles.push(ko.observable(new theGuardianArticle(item)));
             })
         }
 
