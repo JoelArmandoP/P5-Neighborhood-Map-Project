@@ -8,10 +8,16 @@ var mapsGeocoder = null;
 // Wrapper function to retry API call after delay on specific status.
 function callApiWithRetry(apiFunction, request, callback, retryOn) {
     var attempt = 0;
+    var timeout = 300;
     var f = function (result, status) {
-        if (status == retryOn && attempt++ < 3) {
-            setTimeout(function() { apiFunction(request, f); }, 2000);
+        if (status == retryOn && attempt++ < 5) {
+            setTimeout(function() { apiFunction(request, f); }, timeout);
+            timeout *= 2;
         } else {
+            if (status == retryOn) {
+                console.log("Giving up on:");
+                console.log(request);
+            }
             callback(result, status);
         }
     };
@@ -43,7 +49,7 @@ function School(data) {
 }
 School.prototype = Object.create(PointOfInterest.prototype);
 School.prototype.infoWindowTemplateId = 'school-info-window-template';
-School.prototype.category = "School";
+School.prototype.category = "Schools";
 
 // Constructor for Restaurants
 function Restaurant(data) {
@@ -54,7 +60,7 @@ function Restaurant(data) {
 }
 Restaurant.prototype = Object.create(PointOfInterest.prototype);
 Restaurant.prototype.infoWindowTemplateId = 'restaurant-info-window-template';
-Restaurant.prototype.category = "Restaurant";
+Restaurant.prototype.category = "Restaurants";
 
 // Constructor for Wikipedia articles
 function WikiArticle(item) {
@@ -147,12 +153,16 @@ var ViewModel = function () {
         placesService.radarSearch.bind(placesService), {
             location: { lat: self.location().lat(), lng: self.location().lng() },
             radius: 2000,
+            rankBy: 'distance',
             types: Object.keys(placeTypes)
         },
         function(results, status) {
             if (status == google.maps.places.PlacesServiceStatus.OK) {
                 // Got list of places! Get details for each
-                $.each(results, function (index, item) {
+                var index = 0;
+                var getDetailsAtIndex = function () {
+                    if (index >= results.length) { return; }
+                    var item = results[index];
                     callApiWithRetry(
                         placesService.getDetails.bind(placesService), {
                             placeId: item.place_id
@@ -167,15 +177,20 @@ var ViewModel = function () {
                                         type = t;
                                     }
                                 });
-                                if (type !== null) {
+                                var constructor = placeTypes[type];
+                                var category = constructor.prototype.category;
+                                if (type !== null && self.places()[category]().length < 10) {
                                     var place = new placeTypes[type](result);
                                     place.setMapLabel(labels[labelIndex++ % labels.length]);
-                                    self.places()[place.category].push(ko.observable(place));
+                                    self.places()[category].push(ko.observable(place));
                                 }
                             }
+                            index++;
+                            setTimeout(getDetailsAtIndex, 0);
                         },
                         google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT);
-                });
+                };
+                setTimeout(getDetailsAtIndex, 0);
             }
         },
         google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT);
