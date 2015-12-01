@@ -7,40 +7,67 @@
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Oswald:400,700' rel='stylesheet' type='text/css'>
     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js'></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFoI4Tv2fTEgRhBSWn9UtWsJX2_J2-DLg&libraries=places"></script>
     <script src="js/main.js"></script>
-    <title>Your Moving Companion</title>
+    <title>Living in Balham</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div id="container" class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <form class="navbar-form navbar-left" role="search">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Search" name="search-place" data-bind="value:filter, valueUpdate: 'afterkeydown'">
+        <div class="navbar navbar-custom navbar-fixed-top">
+            <div class="navbar-header"><a class="navbar-brand" href="#">Balham</a>
+                <a class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <form class="navbar-form">
+                    <div class="form-group" style="display:inline;">
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <span class="glyphicon glyphicon-chevron-down"></span>
+                                </button>
+                                <ul class="dropdown-menu" data-bind="foreach: categories">
+                                    <li><a href="#" data-bind="text: $data"></a></li>
+                                </ul>
+                            </div>
+                            <input type="text" class="form-control" placeholder="What are you searching for?" data-bind="value:filter, valueUpdate: 'afterkeydown'">
+                            </input>
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </span>
+                        </div>
                     </div>
+                </form>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-2" data-bind="foreach: categories">
-                <h1 class="place-category-heading" data-bind="text: $data"></h1>
-                <ul class="places-list" data-bind="foreach: $parent.selectedPlaces()[$data]">
-                    <li><span class="map-label" data-bind="text:label"></span>
-                        <span class="place-name" data-bind="text: name"></span>
-                    </li>
-                </ul>
+        <div class="row center-content clear-fix">
+            <div class="col-md-3" data-bind="foreach: categories">
+                <div data-bind="if: $parent.selectedPlaces()[$data]().length > 0">
+                    <div class="panel panel-default">
+                        <h1 class="panel-heading place-category" data-bind="text: $data"></h1>
+                        <ul class="list-group" data-bind="foreach: $parent.selectedPlaces()[$data]">
+                            <li class="list-group-item place-item"><span class="map-label" data-bind="text:label"></span>
+                                <span class="place-name" data-bind="text: name"></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-10">
+            <div class="col-md-9">
                 <div class="map" data-bind="map: location">
                 </div>
                 <div id="places-attribution">
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-8">
+        <div class="row center-content clear-fix">
+            <div class="col-md-9">
                 <div class="wikipedia-container">
                     <h3 id="wiki-header"> About Balham</h3>
                     <ul id="wikipedia-links"  data-bind="foreach: wikiArticles">
@@ -52,12 +79,12 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="theGuardian-container">
                     <h3 id="News-header">Balham in the news</h3>
                     <ul id="News-links"  data-bind="foreach: theGuardianArticles">
                         <li>
-                        <h5 class="url"><a data-bind="attr: { href: url }, text: title"></a></span>
+                        <h5 class="url"><a data-bind="attr: { href: url }, text: title"></a></h5>
                         </li>
                     </ul>
                 </div>

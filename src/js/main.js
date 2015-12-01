@@ -250,9 +250,6 @@ var ViewModel = function () {
 
 }
 
-
-
-
 // Get the page running!
 window.addEventListener('load', function () {
     placesService = new google.maps.places.PlacesService(document.getElementById('places-attribution'));
