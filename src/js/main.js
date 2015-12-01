@@ -114,7 +114,11 @@ ko.bindingHandlers.map = {
                     });
                     // Opens an infowindow when a map marker is clicked
                     google.maps.event.addListener(marker, 'click', function() {
-                        infoWindow.open(map, marker);
+                        if (infoWindow.getMap()) {
+                            infoWindow.close();
+                        } else {
+                            infoWindow.open(map, marker);
+                        }
                         //Animate the marker
                         marker.setAnimation(google.maps.Animation.BOUNCE);
                         setTimeout(function() {marker.setAnimation(null)},800);
