@@ -159,8 +159,8 @@ var ViewModel = function () {
         function(results, status) {
             if (status == google.maps.places.PlacesServiceStatus.OK) {
                 // Got list of places! Get details for each
-                var index = 0;
-                var getDetailsAtIndex = function () {
+                var parallel_queries = 4;
+                var getDetailsAtIndex = function (index) {
                     if (index >= results.length) { return; }
                     var item = results[index];
                     callApiWithRetry(
@@ -185,12 +185,13 @@ var ViewModel = function () {
                                     self.places()[category].push(ko.observable(place));
                                 }
                             }
-                            index++;
-                            setTimeout(getDetailsAtIndex, 0);
+                            setTimeout(getDetailsAtIndex.bind(this, index+parallel_queries), 0);
                         },
                         google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT);
                 };
-                setTimeout(getDetailsAtIndex, 0);
+                for (var i = 0; i < parallel_queries; i++) {
+                    setTimeout(getDetailsAtIndex.bind(this, i), i*200);
+                }
             }
         },
         google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT);
