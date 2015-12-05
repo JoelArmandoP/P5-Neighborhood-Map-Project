@@ -32,6 +32,7 @@ function PointOfInterest(data) {
     self.address = ko.computed(function () { return 'formatted_address' in self.data() ? self.data().formatted_address : ''; });
     self.url = ko.computed(function () { return 'url' in self.data() ? self.data().url : ''; });
     self.location = ko.computed(function () { return 'geometry' in self.data() ? self.data().geometry.location : null; });
+    self.iconImage = ko.computed(function () { return 'icon' in self.data() ? self.data().icon : null;});
 }
 PointOfInterest.prototype.setMapLabel = function(label) {
     this.label = ko.observable(label);
@@ -102,7 +103,8 @@ ko.bindingHandlers.map = {
                         position: p().location(),
                         map: map,
                         title: p().name(),
-                        label: p().label()
+                        label: p().label(),
+                        icon: p().iconImage()
                     });
                     /* infoWindows are the little helper windows that open when you click
                     or hover over a pin on a map. They usually contain more information
