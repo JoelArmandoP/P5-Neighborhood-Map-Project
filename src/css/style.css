@@ -74,9 +74,18 @@ h3 {
     color:#fefefe;
 }
 
+.navbar-header {
+	margin-left: 20%
+}
+
 .navbar-custom .form-control:focus {
 	border-color: #49bfff;
 	outline: 0;
 	-webkit-box-shadow: inset 0 0 0;
 	box-shadow: inset 0 0 0;
+	width: 500px
+}
+
+.navbar-form .input-group {
+    width: 50%;
 }
