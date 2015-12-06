@@ -70,6 +70,16 @@ Restaurant.prototype = Object.create(PointOfInterest.prototype);
 Restaurant.prototype.infoWindowTemplateId = 'restaurant-info-window-template';
 Restaurant.prototype.category = "Restaurants";
 
+// Constructor for Transport
+function Transport(data) {
+    var self = this;
+    PointOfInterest.call(self, data);
+}
+Transport.prototype = Object.create(PointOfInterest.prototype);
+Transport.prototype.infoWindowTemplateId = 'transport-info-window-template';
+Transport.prototype.category = "Transport";
+
+
 // Constructor for Wikipedia articles
 function WikiArticle(item) {
     var self = this;
@@ -113,9 +123,7 @@ ko.bindingHandlers.map = {
                         label: p().label(),
                         icon: p().iconImage
                     });
-                    /* infoWindows are the little helper windows that open when you click
-                    or hover over a pin on a map. They usually contain more information
-                    about a location. */
+                    // infoWindows contain more information about a place.
                     var content = document.getElementById(p().infoWindowTemplateId).cloneNode(true);
                     ko.applyBindings(p, content);
                     var infoWindow = new google.maps.InfoWindow({
@@ -140,12 +148,11 @@ ko.bindingHandlers.map = {
 
 var ViewModel = function () {
     var self = this;
-    // Labels to identify markers in the map
     // Coordinates where to center the map
     self.location = ko.observable({
         lat: ko.observable(51.442645),
         lng: ko.observable(-0.152782)});
-
+    // Labels to identify markers in the map
     var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     var labelIndex = 0;
     // Dictionary of place types to constructor
@@ -153,7 +160,9 @@ var ViewModel = function () {
         cafe: Restaurant,
         restaurant: Restaurant,
         bar: Restaurant,
-        school: School
+        school: School,
+        train_station: Transport,
+        subway_station: Transport
     }
 
     // All places to display, by category

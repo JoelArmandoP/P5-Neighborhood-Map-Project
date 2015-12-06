@@ -95,6 +95,11 @@
             <div><span class="data-label">Food: </span><span class="food-type" data-bind="text: foodType"></span></div>
             <div><span class="data-label">Rating: </span><span class="rating" data-bind="text: rating"></span></div>
         </div>
+        <div id="transport-info-window-template" class="info-window-container">
+            <div><span class="data-label maki-bus"> </span><span class="name" data-bind="text: name"></span></div>
+            <div><span class="data-label fontawesome-map-marker"> </span><span class="address" data-bind="text: address"></span></div>
+            <div><span class="data-label  fontawesome-globe"> </span><span class="url"><a data-bind="attr: { href: url }, text: url"></a></span></div>
+        </div>
     </div>
 </body>
 </html>
