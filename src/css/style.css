@@ -58,7 +58,9 @@ h3 {
 	margin-bottom: 0px;
 	font-family:"Oswald", sans-serif;
 }
-
+/*
+Navbar styles
+*/
 .navbar-custom .icon-bar {
 	background-color:#fff;
 }
@@ -92,4 +94,90 @@ h3 {
 
 .navbar-form .input-group {
     width: 50%;
+}
+
+/*
+Hamburger menu styles
+*/
+
+.hamburger-checkbox {
+	position: absolute;
+	opacity: 0;
+}
+
+.hamburger-label {
+	position: absolute;
+	top: 32px;
+	left: 32px;
+	z-index: 1;
+	display: block;
+	width: 42px;
+	height: 42px;
+	font: 42px/42px fontawesome;
+	text-align: center;
+	color: #444;
+	cursor: pointer;
+}
+
+.hamburger-checkbox:checked ~ .hamburger-label:before {
+	content: '\f00d';
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
+	display: block;
+	width: 42px;
+	height: 42px;
+	font: 42px/42px fontawesome;
+	text-align: center;
+	color: #eee;
+}
+
+.hamburger-checkbox:checked ~ .sidebar {
+	width: auto;
+	height: auto;
+	padding-top: 6.5em;
+}
+
+/*
+Sidebar style
+*/
+.sn-backdrop {
+	background: #000;
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	display: none;
+	opacity: 0;
+	z-index: 50;
+	will-change: opacity;
+}
+	
+.sn-visible .sn-backdrop { 
+	display: block
+}
+
+.sn-sidenav {
+	position: fixed;
+	left: 0;
+	top: 0;
+	height: 100%;
+	z-index: 100;
+	overflow-y: auto;
+	will-change: transform;
+	box-shadow: 0 0 30px rgba(0,0,0,0.6);
+	background-color: #3498DB;
+	padding: 20px;
+	color: #fff;
+}
+
+.sn-content {
+	position: relative;
+	z-index: 10;
+}
+
+.sn-visible, .sn-visible body, .sn-visible .sn-content { 
+	overflow: hidden 
 }

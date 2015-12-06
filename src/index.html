@@ -11,6 +11,9 @@
     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js'></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFoI4Tv2fTEgRhBSWn9UtWsJX2_J2-DLg&libraries=places"></script>
     <script src="js/main.js"></script>
+    <!-- Sidenav files, an alternative here: http://startbootstrap.com/template-overviews/simple-sidebar/ -->
+    <link rel="stylesheet" href="sidenavjs/dist/sidenav.css">
+    <script type="text/javascript" src="sidenavjs/dist/sidenav.min.js"></script>
     <title>Living in Balham</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -34,7 +37,15 @@
             </div>
         </div>
         <div class="row center-content clear-fix">
-            <div class="col-md-3" data-bind="foreach: categories">
+            <div id= "sidenav">
+                <div id="backdrop" class="col-md-12">
+                    <div class="map" data-bind="map: location">
+                    </div>
+                    <div id="places-attribution">
+                    </div>
+                </div>
+             </div>
+            <div id="content" data-bind="foreach: categories">
                 <div data-bind="if: $parent.selectedPlaces()[$data]().length > 0">
                     <div class="panel panel-default">
                         <h1 class="panel-heading place-category" data-bind="text: $data"></h1>
@@ -44,12 +55,6 @@
                             </li>
                         </ul>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-9">
-                <div class="map" data-bind="map: location">
-                </div>
-                <div id="places-attribution">
                 </div>
             </div>
         </div>
