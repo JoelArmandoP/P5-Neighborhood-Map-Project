@@ -5,6 +5,7 @@ var placesService = null;
 var mapsGeocoder = null; 
 
 //Initialise sidebar elem
+/*
 var sidenav = new Sidenav({
         content: document.getElementById("content"),
         sidenav: document.getElementById("sidenav"),
@@ -13,6 +14,7 @@ var sidenav = new Sidenav({
 document.getElementById("menu-toggle").addEventListener("click", function() {
         sidenav.open();
 });
+*/
 
 // We may be doing too many requests in one go.
 // Wrapper function to retry API call after delay on specific status.
@@ -49,6 +51,7 @@ function PointOfInterest(data) {
         origin: new google.maps.Point(0,0), // origin
         anchor: new google.maps.Point(0,0) // anchor 
     };
+    
     
 }
 PointOfInterest.prototype.setMapLabel = function(label) {
