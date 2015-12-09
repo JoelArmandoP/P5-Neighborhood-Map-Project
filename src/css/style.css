@@ -53,25 +53,13 @@ h3 {
   border-bottom: 2px solid #333;
 }
 
-.panel-heading {
-	margin-top: 0px;
-	margin-bottom: 0px;
-	font-family:"Oswald", sans-serif;
-}
 /*
 Navbar styles
 */
-.navbar-custom .icon-bar {
-	background-color:#fff;
-}
 
 .navbar-custom {
 	background-color: #168ccc;
     color:#fff;
-}
-
-.navbar-custom li>a:hover,.navbar-custom li>a:focus {
-	background-color:#49bfff;
 }
 
 .navbar-custom a{
@@ -84,100 +72,100 @@ Navbar styles
 	font-family:"Oswald", sans-serif;
 }
 
-.navbar-custom .form-control:focus {
-	border-color: #49bfff;
-	outline: 0;
-	-webkit-box-shadow: inset 0 0 0;
-	box-shadow: inset 0 0 0;
-	width: 500px
-}
 
 .navbar-form .input-group {
     width: 50%;
 }
 
-/*
-Hamburger menu styles
-*/
 
-.hamburger-checkbox {
-	position: absolute;
-	opacity: 0;
-}
-
-.hamburger-label {
-	position: absolute;
-	top: 32px;
-	left: 32px;
-	z-index: 1;
-	display: block;
-	width: 42px;
-	height: 42px;
-	font: 42px/42px fontawesome;
-	text-align: center;
-	color: #444;
-	cursor: pointer;
-}
-
-.hamburger-checkbox:checked ~ .hamburger-label:before {
-	content: '\f00d';
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index: 1;
-	display: block;
-	width: 42px;
-	height: 42px;
-	font: 42px/42px fontawesome;
-	text-align: center;
-	color: #eee;
-}
-
-.hamburger-checkbox:checked ~ .sidebar {
-	width: auto;
-	height: auto;
-	padding-top: 6.5em;
-}
-
-/*
-Sidebar style
-*/
-.sn-backdrop {
-	background: #000;
-	position: absolute;
-	left: 0;
-	top: 0;
-	bottom: 0;
-	right: 0;
-	display: none;
-	opacity: 0;
-	z-index: 50;
-	will-change: opacity;
-}
-	
-.sn-visible .sn-backdrop { 
-	display: block
-}
-
-.sn-sidenav {
+.menu,
+.slideout-menu {
 	position: fixed;
+	height: 80vh;
 	left: 0;
-	top: 0;
-	height: 100%;
-	z-index: 100;
+	bottom: 20;
+	right: 0;
+	z-index: 1;
+	width: 256px;
 	overflow-y: auto;
-	will-change: transform;
-	box-shadow: 0 0 30px rgba(0,0,0,0.6);
-	background-color: #3498DB;
-	padding: 20px;
-	color: #fff;
+	-webkit-overflow-scrolling: touch;
+	display: none;
+	background-color: #fff;
 }
 
-.sn-content {
-	position: relative;
-	z-index: 10;
+.menu-section-title {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	font-family:"Oswald", sans-serif;
 }
 
-.sn-visible, .sn-visible body, .sn-visible .sn-content { 
-	overflow: hidden 
+.panel,
+.slideout-panel {
+  position: relative;
+  z-index: 0;
+}
+
+.panel {
+  text-align: center;
+  padding-top: 5px;
+  min-height: 100%;
+}
+
+.slideout-open,
+.slideout-open body,
+.slideout-open .slideout-panel {
+  overflow: hidden;
+}
+
+.slideout-open .slideout-menu {
+  display: block;
+}
+
+/* Animation
+---------------------------------- */
+@-webkit-keyframes shake {
+  0%, 100% {
+    -webkit-transform:translate3d(0, 0, 0);
+    transform:translate3d(0, 0, 0);
+  }
+
+  50% {
+    -webkit-transform:translate3d(-10px, 0, 0);
+    transform:translate3d(-10px, 0, 0);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    -webkit-transform:translate3d(0, 0, 0);
+    transform:translate3d(0, 0, 0);
+  }
+
+  50% {
+    -webkit-transform:translate3d(-10px, 0, 0);
+    transform:translate3d(-10px, 0, 0);
+  }
+}
+
+.shake {
+  -webkit-animation-name:shake;
+  animation-name:shake;
+  -webkit-animation-duration:2s;
+  animation-duration:2s;
+  -webkit-animation-iteration-count: 4;
+  animation-iteration-count: 4;
+}
+
+
+/* Media queries to handle various device widths */
+
+@media only screen and (min-width: 900px) {
+	.menu,
+	.slideout-menu {
+		display: block;
+	}
+	.hamburger-menu {
+		display: none;
+	}	
+
 }

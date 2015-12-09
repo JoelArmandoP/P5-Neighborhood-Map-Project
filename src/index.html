@@ -10,52 +10,57 @@
     <link href='http://fonts.googleapis.com/css?family=Oswald:400,700' rel='stylesheet' type='text/css'>
     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js'></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFoI4Tv2fTEgRhBSWn9UtWsJX2_J2-DLg&libraries=places"></script>
-    <script src="js/main.js"></script>
-    <!-- Sidenav files, an alternative here: http://startbootstrap.com/template-overviews/simple-sidebar/ -->
-    <link rel="stylesheet" href="sidenavjs/dist/sidenav.css">
-    <script type="text/javascript" src="sidenavjs/dist/sidenav.min.js"></script>
+    <script src="js/main.js"></script> 
+    <!-- slide bar -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slideout/0.1.11/slideout.min.js"></script>
     <title>Living in Balham</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<header>
+    <div class="navbar navbar-custom navbar-fixed-top">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Balham</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <form class="navbar-form">
+                <div class="form-group" style="display:inline;">
+                    <div class="input-group">
+                        <span class="input-group-addon hamburger-menu">
+                           <button class="toggle-button">☰</button> 
+                        </span>
+                        <input type="text" class="form-control" placeholder="What are you searching for?" data-bind="value:filter, valueUpdate: 'afterkeydown'">
+                        </input>
+                        <span class="input-group-addon">
+                           <span class="glyphicon glyphicon-search"></span>
+                        </span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</header>
     <div id="container" class="container">
-        <div class="navbar navbar-custom navbar-fixed-top">
-            <div class="navbar-header"><a class="navbar-brand" href="#">Balham</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <form class="navbar-form">
-                    <div class="form-group" style="display:inline;">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="What are you searching for?" data-bind="value:filter, valueUpdate: 'afterkeydown'">
-                            </input>
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-search"></span>
-                            </span>
+        <div class="row center-content clear-fix">
+            <nav id="menu" class="menu slideout-menu">
+                <div id="menu-content" data-bind="foreach: categories">
+                    <div data-bind="if: $parent.selectedPlaces()[$data]().length > 0">
+                        <div class="menu-default">
+                            <h1 class="menu-section-title place-category" data-bind="text: $data"></h1>
+                            <ul class="menu-section" data-bind="foreach: $parent.selectedPlaces()[$data]">
+                                <li class="menu-section-item place-item"><span class="map-label" data-bind="text:label"></span>
+                                    <span class="place-name" data-bind="text: name"></span>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                </form>
-            </div>
+                </div>
+            </nav>
         </div>
-        <div class="row center-content clear-fix">
-            <div id= "sidenav">
-                <div id="backdrop" class="col-md-12">
-                    <div class="map" data-bind="map: location">
-                    </div>
-                    <div id="places-attribution">
-                    </div>
-                </div>
-             </div>
-            <div id="content" data-bind="foreach: categories">
-                <div data-bind="if: $parent.selectedPlaces()[$data]().length > 0">
-                    <div class="panel panel-default">
-                        <h1 class="panel-heading place-category" data-bind="text: $data"></h1>
-                        <ul class="list-group" data-bind="foreach: $parent.selectedPlaces()[$data]">
-                            <li class="list-group-item place-item"><span class="map-label" data-bind="text:label"></span>
-                                <span class="place-name" data-bind="text: name"></span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+        <div id= "panel" class="slideout panel">
+            <div class="map" data-bind="map: location">
+            </div>
+            <div id="places-attribution">
             </div>
         </div>
         <div class="row center-content clear-fix">
@@ -106,5 +111,24 @@
             <div><span class="data-label  fontawesome-globe"> </span><span class="url"><a data-bind="attr: { href: url }, text: url"></a></span></div>
         </div>
     </div>
+    <script>
+        //Initialise slideout
+
+        var slideout = new Slideout({
+            'panel': document.getElementById('panel'),
+            'menu': document.getElementById('menu'),
+            'side': 'right',
+            'padding': 256,
+            'tolerance': 70
+        });
+
+          // Toggle button
+          document.querySelector('.toggle-button').addEventListener('click', function() {
+            slideout.toggle();
+        });
+          $('.toggle-sbutton').on('click', function() {
+            slideout.open();
+        });
+    </script>
 </body>
 </html>
