@@ -51,10 +51,6 @@ PointOfInterest.prototype.category = "Place";
 function School(data) {
     var self = this;
     PointOfInterest.call(self, data);
-    self.level = ko.computed(function () { return 'level' in self.data() ? self.data().level : ''; });
-    self.gender = ko.computed(function () { return 'gender' in self.data() ? self.data().gender : ''; });
-    self.kind = ko.computed(function () { return 'kind' in self.data() ? self.data().kind : ''; });
-    self.faith = ko.computed(function () { return 'faith' in self.data() ? self.data().faith : ''; });
 }
 School.prototype = Object.create(PointOfInterest.prototype);
 School.prototype.infoWindowTemplateId = 'school-info-window-template';
@@ -64,7 +60,6 @@ School.prototype.category = "Schools";
 function Restaurant(data) {
     var self = this;
     PointOfInterest.call(self, data);
-    self.foodType = ko.computed(function () { return 'foodType' in self.data() ? self.data().foodType : ''; });
     self.rating = ko.computed(function() { return 'rating' in self.data() ? self.data().rating : 'none'; });
 }
 Restaurant.prototype = Object.create(PointOfInterest.prototype);
@@ -286,10 +281,7 @@ window.addEventListener('load', function () {
         'padding': 256,
         'tolerance': 70
     });
-
-    // Toggle button
     $('#toggle-button').click(function() {
         slideout.toggle();
     });
-
 });

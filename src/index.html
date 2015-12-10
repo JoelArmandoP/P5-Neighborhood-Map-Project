@@ -41,7 +41,7 @@
         </div>
         <div class="navbar-collapse collapse">
             <form class="navbar-form">
-                <div class="form-group" style="display:inline;">
+                <div class="form-group">
                     <div class="input-group">
                         <span id="toggle-button" class="input-group-addon hamburger-menu">☰</span>                       
                         <input type="text" class="form-control" placeholder="What are you searching for?" data-bind="value:filter, valueUpdate: 'afterkeydown'">
@@ -92,17 +92,12 @@
             <div><span class="data-label maki-commerical-building"> </span><span class="data" data-bind="text: name"></span></div>
             <div><span class="data-label fontawesome-map-marker"> </span><span class="address" data-bind="text: address"></span></div>
             <div><span class="data-label fontawesome-globe"> </span><span class="url"><a data-bind="attr: { href: url }, text: url"></a></span></div>
-            <div><span class="data-label">Level: </span><span class="level" data-bind="text: level"></span></div>
-            <div><span class="data-label">Gender: </span><span class="gender" data-bind="text: gender"></span></div>
-            <!--<div><span class="data-label">Kind: </span><span class="kind" data-bind="text: kind"></span></div> -->
-            <div><span class="data-label">Faith: </span><pan class="faith" data-bind="text: faith"></pan></div>
-        </div>
+            </div>
         <div id="restaurant-info-window-template" class="info-window-container">
             <div><span class="data-label fontawesome-food"> </span><span class="name" data-bind="text: name"></span></div>
             <div><span class="data-label fontawesome-map-marker"> </span><span class="address" data-bind="text: address"></span></div>
             <div><span class="data-label  fontawesome-globe"> </span><span class="url"><a data-bind="attr: { href: url }, text: url"></a></span></div>
-            <div><span class="data-label">Food: </span><span class="food-type" data-bind="text: foodType"></span></div>
-            <div><span class="data-label">Rating: </span><span class="rating" data-bind="text: rating"></span></div>
+            <div><span class="data-label"> Rating: </span><span class="rating" data-bind="text: rating"></span></div>
         </div>
         <div id="transport-info-window-template" class="info-window-container">
             <div><span class="data-label maki-bus"> </span><span class="name" data-bind="text: name"></span></div>
