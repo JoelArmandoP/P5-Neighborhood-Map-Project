@@ -159,9 +159,8 @@ Navbar styles
 
 /* Media queries to handle various device widths */
 
-@media only screen and (min-width: 900px) {
-	.menu,
-	.slideout-menu {
+@media only screen and (min-width: 1024px) {
+	.menu {
 		display: block;
 	}
 	.hamburger-menu {

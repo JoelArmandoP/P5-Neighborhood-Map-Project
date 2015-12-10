@@ -279,4 +279,17 @@ window.addEventListener('load', function () {
     placesService = new google.maps.places.PlacesService(document.getElementById('places-attribution'));
     mapsGeocoder = new google.maps.Geocoder();
     ko.applyBindings(new ViewModel(), document.getElementById('container'));
+    var slideout = new Slideout({
+        'panel': document.getElementById('panel'),
+        'menu': document.getElementById('menu'),
+        'side': 'right',
+        'padding': 256,
+        'tolerance': 70
+    });
+
+    // Toggle button
+    $('#toggle-button').click(function() {
+        slideout.toggle();
+    });
+
 });

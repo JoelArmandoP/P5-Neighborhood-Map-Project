@@ -111,24 +111,5 @@
             <div><span class="data-label  fontawesome-globe"> </span><span class="url"><a data-bind="attr: { href: url }, text: url"></a></span></div>
         </div>
     </div>
-    <script>
-        //Initialise slideout
-
-        var slideout = new Slideout({
-            'panel': document.getElementById('panel'),
-            'menu': document.getElementById('menu'),
-            'side': 'right',
-            'padding': 256,
-            'tolerance': 70
-        });
-
-          // Toggle button
-          document.querySelector('.toggle-button').addEventListener('click', function() {
-            slideout.toggle();
-        });
-          $('.toggle-sbutton').on('click', function() {
-            slideout.open();
-        });
-    </script>
 </body>
 </html>
