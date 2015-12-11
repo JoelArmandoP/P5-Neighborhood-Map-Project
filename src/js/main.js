@@ -277,7 +277,7 @@ window.addEventListener('load', function () {
     var slideout = new Slideout({
         'panel': document.getElementById('panel'),
         'menu': document.getElementById('menu'),
-        'side': 'right',
+        'side': 'left',
         'padding': 256,
         'tolerance': 70
     });
