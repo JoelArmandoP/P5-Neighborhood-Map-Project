@@ -41,9 +41,9 @@
         </div>
         <div class="navbar-collapse collapse">
             <form class="navbar-form">
+                <span id="toggle-button" class="hamburger-menu navbar-brand">☰</span>
                 <div class="form-group">
                     <div class="input-group">
-                        <span id="toggle-button" class="input-group-addon hamburger-menu">☰</span>                       
                         <input type="text" class="form-control" placeholder="What are you searching for?" data-bind="value:filter, valueUpdate: 'afterkeydown'">
                         </input>
                         <span class="input-group-addon">
@@ -55,34 +55,33 @@
         </div>
     </div>
     </header>
-
         <div id= "panel" class="slideout panel">
             <div class="map" data-bind="map: location">
             </div>
             <div id="places-attribution">
             </div>
-        </div>
-        <div class="row center-content clear-fix">
-            <div class="col-md-9">
-                <div class="wikipedia-container">
-                    <h3 id="wiki-header"> About Balham</h3>
-                    <ul id="wikipedia-links"  data-bind="foreach: wikiArticles">
-                        <li>
-                        <h5 id="wiki-article-title" data-bind="text:title"></h5>
-                        <span id="wiki-snippet" data-bind="text:snippet"></span>
-                        <span class="url"><a data-bind="attr: { href: url }, text: url"></a></span>
-                        </li>
-                    </ul>
+            <div class="row center-content clear-fix">
+                <div class="col-md-9">
+                    <div class="wikipedia-container news-container">
+                        <h3 id="wiki-header"> About Balham</h3>
+                        <ul id="wikipedia-links"  data-bind="foreach: wikiArticles">
+                            <li>
+                                <h5 id="wiki-article-title" data-bind="text:title"></h5>
+                                <span id="wiki-snippet" data-bind="text:snippet"></span>
+                                <span class="url"><a data-bind="attr: { href: url }, text: url"></a></span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="theGuardian-container">
-                    <h3 id="News-header">Balham in the news</h3>
-                    <ul id="News-links"  data-bind="foreach: theGuardianArticles">
-                        <li>
-                        <h5 class="url"><a data-bind="attr: { href: url }, text: title"></a></h5>
-                        </li>
-                    </ul>
+                <div class="col-md-3">
+                    <div class="theGuardian-container news-container">
+                        <h3 id="News-header">Balham in the news</h3>
+                        <ul id="News-links"  data-bind="foreach: theGuardianArticles">
+                            <li>
+                                <h5 class="url"><a data-bind="attr: { href: url }, text: title"></a></h5>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

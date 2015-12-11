@@ -53,6 +53,10 @@ h3 {
   border-bottom: 2px solid #333;
 }
 
+.news-container {
+  text-align: left;
+}
+
 /*
 Navbar styles
 */
@@ -84,7 +88,6 @@ Navbar styles
   height: 80vh;
   right: 0;
   bottom: 20;
-  right: 0;
   z-index: 1;
   width: 256px;
   overflow-y: auto;
@@ -98,7 +101,7 @@ Navbar styles
 }
 
 .menu-section-title {
-  margin-top: 0px;
+  margin-top: 10px;
   margin-bottom: 0px;
   font-family:"Oswald", sans-serif;
 }
