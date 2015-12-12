@@ -33,18 +33,19 @@ function PointOfInterest(data) {
     self.url = ko.computed(function () { return 'url' in self.data() ? self.data().url : ''; });
     self.location = ko.computed(function () { return 'geometry' in self.data() ? self.data().geometry.location : null; });
     var mapIconImage = ko.computed(function () { return 'icon' in self.data() ? self.data().icon : null;});
+    // Use icon from Places service
     self.iconImage = {
         url: mapIconImage(), // url
-        scaledSize: new google.maps.Size(25, 25), // size
+        scaledSize: new google.maps.Size(25, 25), // scale size
         origin: new google.maps.Point(0,0), // origin
         anchor: new google.maps.Point(0,0) // anchor 
     };
-    
-    
 }
+// Set the label to identify the point of interest in the map
 PointOfInterest.prototype.setMapLabel = function(label) {
     this.label = ko.observable(label);
 }
+// Set a generic category
 PointOfInterest.prototype.category = "Place";
 
 // Constructor for Schools
@@ -53,7 +54,9 @@ function School(data) {
     PointOfInterest.call(self, data);
 }
 School.prototype = Object.create(PointOfInterest.prototype);
+// Assign a School template
 School.prototype.infoWindowTemplateId = 'school-info-window-template';
+// Assign School category
 School.prototype.category = "Schools";
 
 // Constructor for Restaurants
@@ -86,7 +89,6 @@ function WikiArticle(item) {
 }
 
 // Constructor for The Guardian articles
-
 function theGuardianArticle(item) {
     var self = this;
     self.data = ko.observable(item);
@@ -111,6 +113,7 @@ ko.bindingHandlers.map = {
 
         viewModel.categories().forEach(function(k) {
             viewModel.selectedPlaces()[k]().forEach(function(p) {
+                // Create the marker in the map
                 if('lat' in p().location()) {
                     var marker = new google.maps.Marker({
                         position: p().location(),
@@ -176,7 +179,7 @@ var ViewModel = function () {
         },
         function(results, status) {
             if (status == google.maps.places.PlacesServiceStatus.OK) {
-                // Got list of places! Get details for each
+                // Got list of places. Get details for each
                 var parallel_queries = 4;
                 var getDetailsAtIndex = function (index) {
                     if (index >= results.length) { return; }
@@ -187,7 +190,7 @@ var ViewModel = function () {
                         },
                         function(result, status) {
                             if (status == google.maps.places.PlacesServiceStatus.OK) {
-                                // Got details for a place
+                                // Get details for a place
                                 // Instantiate and add to category
                                 var type = null;
                                 $.each(result.types, function (i, t) {
@@ -197,7 +200,7 @@ var ViewModel = function () {
                                 });
                                 var constructor = placeTypes[type];
                                 var category = constructor.prototype.category;
-                                if (type !== null && self.places()[category]().length < 10) {
+                                if (type !== null && self.places()[category]().length < 15) {
                                     var place = new placeTypes[type](result);
                                     place.setMapLabel(labels[labelIndex++ % labels.length]);
                                     self.places()[category].push(ko.observable(place));
@@ -274,6 +277,7 @@ window.addEventListener('load', function () {
     placesService = new google.maps.places.PlacesService(document.getElementById('places-attribution'));
     mapsGeocoder = new google.maps.Geocoder();
     ko.applyBindings(new ViewModel(), document.getElementById('container'));
+    // Create slideout menu
     var slideout = new Slideout({
         'panel': document.getElementById('panel'),
         'menu': document.getElementById('menu'),
