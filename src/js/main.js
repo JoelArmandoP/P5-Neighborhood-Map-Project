@@ -170,7 +170,7 @@ var ViewModel = function () {
     callApiWithRetry(
         placesService.radarSearch.bind(placesService), {
             location: { lat: self.location().lat(), lng: self.location().lng() },
-            radius: 2000,
+            radius: 1000,
             rankBy: 'distance',
             types: Object.keys(placeTypes)
         },
