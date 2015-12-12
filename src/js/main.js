@@ -35,7 +35,7 @@ function PointOfInterest(data) {
     var mapIconImage = ko.computed(function () { return 'icon' in self.data() ? self.data().icon : null;});
     self.iconImage = {
         url: mapIconImage(), // url
-        scaledSize: new google.maps.Size(30, 30), // size
+        scaledSize: new google.maps.Size(25, 25), // size
         origin: new google.maps.Point(0,0), // origin
         anchor: new google.maps.Point(0,0) // anchor 
     };
