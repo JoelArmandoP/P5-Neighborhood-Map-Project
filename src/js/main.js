@@ -36,9 +36,9 @@ function PointOfInterest(data) {
     // Use icon from Places service
     self.iconImage = {
         url: mapIconImage(), // url
-        scaledSize: new google.maps.Size(25, 25), // scale size
+        scaledSize: new google.maps.Size(20, 20), // scale size
         origin: new google.maps.Point(0,0), // origin
-        anchor: new google.maps.Point(0,0) // anchor 
+        anchor: new google.maps.Point(0,0),// anchor 
     };
 }
 // Set the label to identify the point of interest in the map
@@ -115,12 +115,15 @@ ko.bindingHandlers.map = {
             viewModel.selectedPlaces()[k]().forEach(function(p) {
                 // Create the marker in the map
                 if('lat' in p().location()) {
-                    var marker = new google.maps.Marker({
+                    var marker = new MarkerWithLabel({
                         position: p().location(),
                         map: map,
                         title: p().name(),
-                        label: p().label(),
-                        icon: p().iconImage
+                        icon: p().iconImage,
+                        labelContent: p().label(),
+                        labelAnchor: new google.maps.Point(3, -20),
+                        labelClass: "labels",
+                        labelStyle: {opacity: 0.75}
                     });
                     // infoWindows contain more information about a place.
                     var content = document.getElementById(p().infoWindowTemplateId).cloneNode(true);
@@ -153,6 +156,7 @@ var ViewModel = function () {
         lng: ko.observable(-0.152782)});
     // Labels to identify markers in the map
     var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    labels.bold();
     var labelIndex = 0;
     // Dictionary of place types to constructor
     var placeTypes = {
@@ -200,7 +204,7 @@ var ViewModel = function () {
                                 });
                                 var constructor = placeTypes[type];
                                 var category = constructor.prototype.category;
-                                if (type !== null && self.places()[category]().length < 15) {
+                                if (type !== null && self.places()[category]().length < 10) {
                                     var place = new placeTypes[type](result);
                                     place.setMapLabel(labels[labelIndex++ % labels.length]);
                                     self.places()[category].push(ko.observable(place));
