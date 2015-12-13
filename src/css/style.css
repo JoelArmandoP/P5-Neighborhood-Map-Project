@@ -70,7 +70,6 @@ h3 {
 }
 
 .navbar-header {
-  display: none;
   font: bold 24px/29px;
   font-family:"Oswald", sans-serif;
 }
@@ -193,11 +192,4 @@ h3 {
   .hamburger-menu {
     display: none;
   } 
-}
-
-@media only screen and (min-width: 540px) {
-  .navbar-header {
-    display: block;
-  }
-
 }
