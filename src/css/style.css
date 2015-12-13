@@ -71,7 +71,6 @@ h3 {
 
 .navbar-header {
   display: none;
-  margin-left: 20%;
   font: bold 24px/29px;
   font-family:"Oswald", sans-serif;
 }
@@ -86,7 +85,6 @@ h3 {
 
 .input-group {
     display: inline-table;
-    width: 50vh;
 }
 
 /* slideout menu and panel styles*/
@@ -198,7 +196,6 @@ h3 {
 }
 
 @media only screen and (min-width: 540px) {
-
   .navbar-header {
     display: block;
   }
