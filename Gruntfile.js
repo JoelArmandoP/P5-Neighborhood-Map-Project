@@ -25,21 +25,6 @@ grunt.initConfig({
 			}]
         }
 	},
-	cssmin: {
-        dist: {
-			files: [{
-			    expand: true,
-			    src: ['*.css'],
-			    cwd: 'src/css/',
-			    dest: 'dist/css/'
-			}, {
-			    expand: true,
-			    src: ['*.css'],
-			    cwd: 'src/css/',
-				dest: 'dist/css/'
-			}]
-        }
-	},
 	htmlmin: {                                      
     	dist: {                                       
       		options: {                                  
@@ -56,8 +41,7 @@ grunt.initConfig({
 
     grunt.loadNpmTasks('grunt-inline');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
-    grunt.registerTask('default', ['inline', 'uglify', 'cssmin','htmlmin']);
+    grunt.registerTask('default', ['inline', 'uglify', 'htmlmin']);
 }
  
