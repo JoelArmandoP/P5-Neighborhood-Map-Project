@@ -126,7 +126,8 @@ h3 {
   overflow: hidden;
 }
 
-.slideout-open .slideout-menu {
+.slideout-open,
+.slideout-menu {
   display: block;
 }
 
