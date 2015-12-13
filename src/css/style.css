@@ -15,11 +15,10 @@
 }
 
 body {
+    padding-top:50px; 
     height: 100%; 
     margin: 0; 
-    padding: 0;
-    /*padding for navbar*/
-    padding-top:50px; 
+    /*padding: 0;*/
 }
 /* Set height of map to 80vh to show the news items at the bottom*/
 .map {
@@ -126,10 +125,10 @@ h3 {
   overflow: hidden;
 }
 
-.slideout-open,
-.slideout-menu {
+.slideout-open .slideout-menu {
   display: block;
 }
+
 
 /* Animation */
 @-webkit-keyframes shake {
