@@ -7,5 +7,4 @@ Joel Armando
 
 # How to run the application:
 
-
 Download the repository and load dist/index.html to run the application
