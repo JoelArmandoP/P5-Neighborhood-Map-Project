@@ -40,6 +40,7 @@ function PointOfInterest(data) {
         origin: new google.maps.Point(0,0), // origin
         anchor: new google.maps.Point(0,0),// anchor 
     };
+    // Reference to the function to show InfoWindow in marker
     self.showInfoWindow = function() {};
 }
 
