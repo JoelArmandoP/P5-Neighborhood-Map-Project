@@ -41,7 +41,7 @@
                         <h1 class="menu-section-title place-category" data-bind="text: $data"></h1>
                         <ul class="menu-section" data-bind="foreach: $parent.selectedPlaces()[$data]">
                             <li class="menu-section-item place-item"><span class="map-label" data-bind="text:label"></span>
-                                <span class="place-name" data-bind="text: name"></span>
+                                <span id="place-name" class="place-name" data-bind="text:name, click:showInfoWindow"></span>
                             </li>
                         </ul>
                     </div>

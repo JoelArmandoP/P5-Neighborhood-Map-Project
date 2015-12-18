@@ -40,7 +40,9 @@ function PointOfInterest(data) {
         origin: new google.maps.Point(0,0), // origin
         anchor: new google.maps.Point(0,0),// anchor 
     };
+    self.showInfoWindow = function() {};
 }
+
 // Set the label to identify the point of interest in the map
 PointOfInterest.prototype.setMapLabel = function(label) {
     this.label = ko.observable(label);
@@ -131,17 +133,21 @@ ko.bindingHandlers.map = {
                     var infoWindow = new google.maps.InfoWindow({
                         content: content
                     });
+                    
                     // Opens an infowindow when a map marker is clicked
-                    google.maps.event.addListener(marker, 'click', function() {
+                    p().showInfoWindow = function() {
                         if (infoWindow.getMap()) {
                             infoWindow.close();
                         } else {
                             infoWindow.open(map, marker);
                         }
+
                         //Animate the marker
                         marker.setAnimation(google.maps.Animation.BOUNCE);
                         setTimeout(function() {marker.setAnimation(null)},800);
-                    });
+                    };
+
+                    google.maps.event.addListener(marker, 'click', p().showInfoWindow);
                 }
             })
         });
