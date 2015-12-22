@@ -192,7 +192,7 @@ var ViewModel = function () {
             constructor: School
         },
         'Transport': {
-            types: ['train_station', 'subway_station'],
+            types: ['train_station', 'subway_station', 'bus_station'],
             constructor: Transport
         }
     };
