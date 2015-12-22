@@ -206,7 +206,7 @@ var ViewModel = function () {
         callApiWithRetry(
             placesService.nearbySearch.bind(placesService), {
                 location: { lat: self.location().lat(), lng: self.location().lng() },
-                radius: 1000,
+                radius: 1500,
                 types: placeTypes[category].types
             },
             function(results, status) {
