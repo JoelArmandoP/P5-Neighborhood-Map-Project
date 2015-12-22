@@ -32,6 +32,7 @@ function PointOfInterest(data) {
     self.address = ko.computed(function () { return 'formatted_address' in self.data() ? self.data().formatted_address : ''; });
     self.url = ko.computed(function () { return 'url' in self.data() ? self.data().url : ''; });
     self.location = ko.computed(function () { return 'geometry' in self.data() ? self.data().geometry.location : null; });
+    self.label = ko.observable('');
     var mapIconImage = ko.computed(function () { return 'icon' in self.data() ? self.data().icon : null;});
     // Use icon from Places service
     self.iconImage = {
@@ -42,11 +43,6 @@ function PointOfInterest(data) {
     };
     // Reference to the function to show InfoWindow in marker
     self.showInfoWindow = function() {};
-}
-
-// Set the label to identify the point of interest in the map
-PointOfInterest.prototype.setMapLabel = function(label) {
-    this.label = ko.observable(label);
 }
 // Set a generic category
 PointOfInterest.prototype.category = "Place";
@@ -165,68 +161,49 @@ var ViewModel = function () {
     var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     labels.bold();
     var labelIndex = 0;
-    // Dictionary of place types to constructor
+    // Dictionary of category to place types
     var placeTypes = {
-        cafe: Restaurant,
-        restaurant: Restaurant,
-        bar: Restaurant,
-        school: School,
-        train_station: Transport,
-        subway_station: Transport
-    }
+        'Restaurant': {
+            types: ['cafe', 'restaurant', 'bar'],
+            constructor: Restaurant
+        },
+        'School': {
+            types: ['school'],
+            constructor: School
+        },
+        'Transport': {
+            types: ['train_station', 'subway_station'],
+            constructor: Transport
+        }
+    };
 
-    // All places to display, by category
+    // Create places as a map from category to ko.observableArray of PointOfInterest
     var places = {};
-    Object.keys(placeTypes).forEach(function (k) { places[new placeTypes[k]({}).category] = ko.observableArray([]); });
-    self.places = ko.observable(places);
-
-    // Get a list of relevant places from Google Places
-    callApiWithRetry(
-        placesService.radarSearch.bind(placesService), {
-            location: { lat: self.location().lat(), lng: self.location().lng() },
-            radius: 1000,
-            rankBy: 'distance',
-            types: Object.keys(placeTypes)
-        },
-        function(results, status) {
-            if (status == google.maps.places.PlacesServiceStatus.OK) {
-                // Got list of places. Get details for each
-                var parallel_queries = 4;
-                var getDetailsAtIndex = function (index) {
-                    if (index >= results.length) { return; }
-                    var item = results[index];
-                    callApiWithRetry(
-                        placesService.getDetails.bind(placesService), {
-                            placeId: item.place_id
-                        },
-                        function(result, status) {
-                            if (status == google.maps.places.PlacesServiceStatus.OK) {
-                                // Get details for a place
-                                // Instantiate and add to category
-                                var type = null;
-                                $.each(result.types, function (i, t) {
-                                    if (type === null && t in placeTypes) {
-                                        type = t;
-                                    }
-                                });
-                                var constructor = placeTypes[type];
-                                var category = constructor.prototype.category;
-                                if (type !== null && self.places()[category]().length < 10) {
-                                    var place = new placeTypes[type](result);
-                                    place.setMapLabel(labels[labelIndex++ % labels.length]);
-                                    self.places()[category].push(ko.observable(place));
-                                }
-                            }
-                            setTimeout(getDetailsAtIndex.bind(this, index+parallel_queries), 0);
-                        },
-                        google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT);
-                };
-                for (var i = 0; i < parallel_queries; i++) {
-                    setTimeout(getDetailsAtIndex.bind(this, i), i*200);
+    var placesPerCategory = 10;
+    Object.keys(placeTypes).forEach(function (category) {
+        places[category] = ko.observableArray([]);
+        var constructor = placeTypes[category].constructor;
+        callApiWithRetry(
+            placesService.nearbySearch.bind(placesService), {
+                location: { lat: self.location().lat(), lng: self.location().lng() },
+                radius: 1000,
+                types: placeTypes[category].types
+            },
+            function(results, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    var count = 0;
+                    results.forEach(function (placeData) {
+                        if (count < placesPerCategory) {
+                            var place = new constructor(placeData);
+                            place.label(labels[count++ % labels.length]);
+                            places[category].push(new ko.observable(place));
+                        }
+                    });
                 }
-            }
-        },
-        google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT);
+            },
+            google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT);
+    });
+    self.places = ko.observable(places);
 
     // Alphabetically sorted list of all categories found.
     self.categories = ko.observable(Object.keys(self.places()).sort());
