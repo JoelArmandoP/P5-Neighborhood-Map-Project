@@ -48,6 +48,7 @@ function PointOfInterest(data) {
     // Reference to the function to show InfoWindow in marker
     self.showInfoWindow = function() {};
 }
+// If details haven been fetched yet, call Places API to replace Place Search Results object in self.data() with Place Details Result object.
 PointOfInterest.prototype.fetchDetails = function () {
     var self = this;
     if (!self.detailsValid) {
@@ -124,6 +125,7 @@ ko.bindingHandlers.map = {
         var map = new google.maps.Map(elem, mapOptions);
         map.neighborhoodMapInfoWindow = null;
 
+        // create markers for each place in the selectedPlaces observable.
         viewModel.categories().forEach(function(k) {
             viewModel.selectedPlaces()[k]().forEach(function(p) {
                 // Create the marker in the map
@@ -138,14 +140,14 @@ ko.bindingHandlers.map = {
                         labelClass: "labels",
                         labelStyle: {opacity: 0.75}
                     });
-                    // infoWindows contain more information about a place.
+                    // Create infoWinddow to display detailed info about the place
                     var content = document.getElementById(p().infoWindowTemplateId).cloneNode(true);
                     ko.applyBindings(p, content);
                     var infoWindow = new google.maps.InfoWindow({
                         content: content
                     });
                     
-                    // Opens an infowindow when a map marker is clicked
+                    // Create function to open infoWindow on demand
                     p().showInfoWindow = function() {
                         if (map.neighborhoodMapInfoWindow && map.neighborhoodMapInfoWindow.getMap()) {
                             map.neighborhoodMapInfoWindow.close();
@@ -159,6 +161,7 @@ ko.bindingHandlers.map = {
                         setTimeout(function() {marker.setAnimation(null)},800);
                     };
 
+                    // Configure marker to open infoWindow on click
                     google.maps.event.addListener(marker, 'click', p().showInfoWindow);
                 }
             })
@@ -176,7 +179,7 @@ var ViewModel = function () {
     var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     labels.bold();
     var labelIndex = 0;
-    // Dictionary of category to place types
+    // Dictionary of categories to place types
     var placeTypes = {
         'Restaurant': {
             types: ['cafe', 'restaurant', 'bar'],
