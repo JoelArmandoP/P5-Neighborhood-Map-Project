@@ -128,41 +128,6 @@ h3 {
   display: block;
 }
 
-
-/* Animation */
-@-webkit-keyframes shake {
-  0%, 100% {
-    -webkit-transform:translate3d(0, 0, 0);
-    transform:translate3d(0, 0, 0);
-  }
-
-  50% {
-    -webkit-transform:translate3d(-10px, 0, 0);
-    transform:translate3d(-10px, 0, 0);
-  }
-}
-
-@keyframes shake {
-  0%, 100% {
-    -webkit-transform:translate3d(0, 0, 0);
-    transform:translate3d(0, 0, 0);
-  }
-
-  50% {
-    -webkit-transform:translate3d(-10px, 0, 0);
-    transform:translate3d(-10px, 0, 0);
-  }
-}
-
-.shake {
-  -webkit-animation-name:shake;
-  animation-name:shake;
-  -webkit-animation-duration:2s;
-  animation-duration:2s;
-  -webkit-animation-iteration-count: 4;
-  animation-iteration-count: 4;
-}
-
 .info-window-container {
   text-align: left;
 }
@@ -178,15 +143,3 @@ h3 {
   border: 0;
   white-space: nowrap;
 }
-
-/* Media queries to handle various device widths
-
-@media only screen and (min-width: 1024px) {
-  .menu {
-    display: block;
-  }
-  .hamburger-menu {
-    display: none;
-  } 
-}
-*/
