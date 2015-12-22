@@ -31,7 +31,7 @@ function PointOfInterest(data) {
     self.data = ko.observable(data);
     self.name = ko.computed(function () { return 'name' in self.data() ? self.data().name : ''; });
     self.address = ko.computed(function () { return 'formatted_address' in self.data() ? self.data().formatted_address : ''; });
-    self.url = ko.computed(function () { return 'url' in self.data() ? self.data().url : ''; });
+    self.url = ko.computed(function () { return 'website' in self.data() ? self.data().website : ''; });
     self.location = ko.observable(data.geometry.location);
     self.label = ko.observable('');
     self.mapIconImageUrl = ko.computed(function () { return 'icon' in self.data() ? self.data().icon : null;});
