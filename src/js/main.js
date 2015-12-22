@@ -5,12 +5,13 @@ var placesService = null;
 var mapsGeocoder = null; 
 
 // We may be doing too many requests in one go.
-// Wrapper function to retry API call after delay on specific status.
+// Wrapper function to retry API call with exponential back-off on specific status.
 function callApiWithRetry(apiFunction, request, callback, retryOn) {
     var attempt = 0;
+    var maxAttempts = 5;
     var timeout = 300;
     var f = function (result, status) {
-        if (status == retryOn && attempt++ < 5) {
+        if (status == retryOn && attempt++ < maxAttempts) {
             setTimeout(function() { apiFunction(request, f); }, timeout);
             timeout *= 2;
         } else {
