@@ -146,9 +146,8 @@ ko.bindingHandlers.map = {
                     
                     // Opens an infowindow when a map marker is clicked
                     p().showInfoWindow = function() {
-                        if (map.neighborhoodMapInfoWindow) {
+                        if (map.neighborhoodMapInfoWindow && map.neighborhoodMapInfoWindow.getMap()) {
                             map.neighborhoodMapInfoWindow.close();
-                            map.neighborhoodMapInfoWindow = null;
                         }
                         p().fetchDetails();
                         infoWindow.open(map, marker);
