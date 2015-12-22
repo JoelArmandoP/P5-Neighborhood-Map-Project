@@ -19,76 +19,76 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<div id="container">
-    <header>
-	    <div class="navbar navbar-custom navbar-fixed-top">
-    	    <div class="navbar-header">
-        	    <span id="toggle-button" class="hamburger-menu navbar-brand">☰</span>
-            	<a class="navbar-brand" href="#">Balham</a>
-        	</div>
-    	</div>
-    </header>
-    <nav id="menu" class="menu slideout-menu">
-        <div id="menu-header" class= "menu-header">
-            <form class="navbar-form">
-                <div class="form-group">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="What are you searching for?" data-bind="value:filter, valueUpdate: 'afterkeydown'">
-                        <span class="input-group-addon">
-                           <span class="glyphicon glyphicon-search"></span>
-                        </span>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div id="menu-content" data-bind="foreach: categories">
-            <div data-bind="if: $parent.selectedPlaces()[$data]().length > 0">
-                <div class="menu-default">
-                    <h1 class="menu-section-title place-category" data-bind="text: $data"></h1>
-                    <ul class="menu-section" data-bind="foreach: $parent.selectedPlaces()[$data]">
-                        <li class="menu-section-item place-item"><span class="map-label" data-bind="text:label"></span>
-                            <span id="place-name" class="place-name" data-bind="text:name, click:showInfoWindow"></span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </nav>
-	<div id="panel" class="container slideout-panel">
-	    <div class="row center-content clearfix">
-	        <div class="col-md-12"> 
-			    <div class="map" data-bind="map: location">
+	<div id="container">
+	    <header>
+		    <div class="navbar navbar-custom navbar-fixed-top">
+	    	    <div class="navbar-header">
+	        	    <span id="toggle-button" class="hamburger-menu navbar-brand">☰</span>
+	            	<a class="navbar-brand" href="#">Balham</a>
 	        	</div>
-	            <div id="places-attribution">
+	    	</div>
+	    </header>
+	    <nav id="menu" class="menu slideout-menu">
+	        <div id="menu-header" class= "menu-header">
+	            <form class="navbar-form">
+	                <div class="form-group">
+	                    <div class="input-group">
+	                        <input type="text" class="form-control" placeholder="What are you searching for?" data-bind="value:filter, valueUpdate: 'afterkeydown'">
+	                        <span class="input-group-addon">
+	                           <span class="glyphicon glyphicon-search"></span>
+	                        </span>
+	                    </div>
+	                </div>
+	            </form>
+	        </div>
+	        <div id="menu-content" data-bind="foreach: categories">
+	            <div data-bind="if: $parent.selectedPlaces()[$data]().length > 0">
+	                <div class="menu-default">
+	                    <h1 class="menu-section-title place-category" data-bind="text: $data"></h1>
+	                    <ul class="menu-section" data-bind="foreach: $parent.selectedPlaces()[$data]">
+	                        <li class="menu-section-item place-item"><span class="map-label" data-bind="text:label"></span>
+	                            <span id="place-name" class="place-name" data-bind="text:name, click:showInfoWindow"></span>
+	                        </li>
+	                    </ul>
+	                </div>
 	            </div>
 	        </div>
-	    </div>
-	    <div class="row center-content clearfix">
-	        <div class="col-md-9">
-	            <div class="wikipedia-container news-container">
-	                <h3 id="wiki-header"> About Balham</h3>
-	                <ul id="wikipedia-links"  data-bind="foreach: wikiArticles">
-	                    <li>
-	                        <h5 id="wiki-article-title" data-bind="text:title"></h5>
-	                        <span id="wiki-snippet" data-bind="text:snippet"></span>
-	                        <span class="url"><a data-bind="attr: { href: url }, text: url"></a></span>
-	                    </li>
-	                </ul>
-	            </div>
-	        </div>
-	        <div class="col-md-3">
-	            <div class="theGuardian-container news-container">
-	                <h3 id="News-header">Balham in the news</h3>
-	                <ul id="News-links"  data-bind="foreach: theGuardianArticles">
-	                    <li>
-	                        <h5 class="url"><a data-bind="attr: { href: url }, text: title"></a></h5>
-	                    </li>
-	                </ul>
-	            </div>
-	        </div>
-	    </div>
+	    </nav>
+		<div id="panel" class="container slideout-panel">
+		    <div class="row center-content clearfix">
+		        <div class="col-md-12"> 
+				    <div class="map" data-bind="map: location">
+		        	</div>
+		            <div id="places-attribution">
+		            </div>
+		        </div>
+		    </div>
+		    <div class="row center-content clearfix">
+		        <div class="col-md-9">
+		            <div class="wikipedia-container news-container">
+		                <h3 id="wiki-header"> About Balham</h3>
+		                <ul id="wikipedia-links"  data-bind="foreach: wikiArticles">
+		                    <li>
+		                        <h5 id="wiki-article-title" data-bind="text:title"></h5>
+		                        <span id="wiki-snippet" data-bind="text:snippet"></span>
+		                        <span class="url"><a data-bind="attr: { href: url }, text: url"></a></span>
+		                    </li>
+		                </ul>
+		            </div>
+		        </div>
+		        <div class="col-md-3">
+		            <div class="theGuardian-container news-container">
+		                <h3 id="News-header">Balham in the news</h3>
+		                <ul id="News-links"  data-bind="foreach: theGuardianArticles">
+		                    <li>
+		                        <h5 class="url"><a data-bind="attr: { href: url }, text: title"></a></h5>
+		                    </li>
+		                </ul>
+		            </div>
+		        </div>
+		    </div>
+		 </div>
 	 </div>
- </div>
     <div style="display:none">
         <div id="school-info-window-template" class="info-window-container">
             <div><span class="data-label maki-commerical-building"> </span><span class="data" data-bind="text: name"></span></div>
