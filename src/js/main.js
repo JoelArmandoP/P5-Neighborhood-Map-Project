@@ -27,11 +27,12 @@ function callApiWithRetry(apiFunction, request, callback, retryOn) {
 // Constructor for PointOfInterest
 function PointOfInterest(data) {
     var self = this;
+    self.detailsValid = false;
     self.data = ko.observable(data);
     self.name = ko.computed(function () { return 'name' in self.data() ? self.data().name : ''; });
     self.address = ko.computed(function () { return 'formatted_address' in self.data() ? self.data().formatted_address : ''; });
     self.url = ko.computed(function () { return 'url' in self.data() ? self.data().url : ''; });
-    self.location = ko.computed(function () { return 'geometry' in self.data() ? self.data().geometry.location : null; });
+    self.location = ko.observable(data.geometry.location);
     self.label = ko.observable('');
     self.mapIconImageUrl = ko.computed(function () { return 'icon' in self.data() ? self.data().icon : null;});
     // Use icon from Places service
@@ -48,6 +49,22 @@ function PointOfInterest(data) {
 }
 // Set a generic category
 PointOfInterest.prototype.category = "Place";
+PointOfInterest.prototype.fetchDetails = function () {
+    var self = this;
+    if (!self.detailsValid) {
+        callApiWithRetry(
+            placesService.getDetails.bind(placesService), {
+                placeId: self.data().place_id
+            },
+            function(result, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    self.data(result);
+                }
+            },
+            google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT);
+        self.detailsValid = true;
+    }
+};
 
 // Constructor for Schools
 function School(data) {
@@ -138,6 +155,7 @@ ko.bindingHandlers.map = {
                         if (infoWindow.getMap()) {
                             infoWindow.close();
                         } else {
+                            p().fetchDetails();
                             infoWindow.open(map, marker);
                         }
 
