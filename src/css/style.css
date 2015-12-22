@@ -89,7 +89,7 @@ h3 {
   right: 0;
   bottom: 20;
   z-index: 1;
-  width: 256px;
+  max-width: 80vw;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   display: none;
