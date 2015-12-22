@@ -128,6 +128,7 @@ ko.bindingHandlers.map = {
             zoom: 15
         };
         var map = new google.maps.Map(elem, mapOptions);
+        map.neighborhoodMapInfoWindow = null;
 
         viewModel.categories().forEach(function(k) {
             viewModel.selectedPlaces()[k]().forEach(function(p) {
@@ -152,12 +153,13 @@ ko.bindingHandlers.map = {
                     
                     // Opens an infowindow when a map marker is clicked
                     p().showInfoWindow = function() {
-                        if (infoWindow.getMap()) {
-                            infoWindow.close();
-                        } else {
-                            p().fetchDetails();
-                            infoWindow.open(map, marker);
+                        if (map.neighborhoodMapInfoWindow) {
+                            map.neighborhoodMapInfoWindow.close();
+                            map.neighborhoodMapInfoWindow = null;
                         }
+                        p().fetchDetails();
+                        infoWindow.open(map, marker);
+                        map.neighborhoodMapInfoWindow = infoWindow;
 
                         //Animate the marker
                         marker.setAnimation(google.maps.Animation.BOUNCE);
