@@ -33,14 +33,16 @@ function PointOfInterest(data) {
     self.url = ko.computed(function () { return 'url' in self.data() ? self.data().url : ''; });
     self.location = ko.computed(function () { return 'geometry' in self.data() ? self.data().geometry.location : null; });
     self.label = ko.observable('');
-    var mapIconImage = ko.computed(function () { return 'icon' in self.data() ? self.data().icon : null;});
+    self.mapIconImageUrl = ko.computed(function () { return 'icon' in self.data() ? self.data().icon : null;});
     // Use icon from Places service
-    self.iconImage = {
-        url: mapIconImage(), // url
-        scaledSize: new google.maps.Size(20, 20), // scale size
-        origin: new google.maps.Point(0,0), // origin
-        anchor: new google.maps.Point(0,0),// anchor 
-    };
+    self.mapIconImage = ko.computed(function () {
+        return {
+            url: self.mapIconImageUrl(), // url
+            scaledSize: new google.maps.Size(20, 20), // scale size
+            origin: new google.maps.Point(0,0), // origin
+            anchor: new google.maps.Point(0,0),// anchor 
+        };
+    })
     // Reference to the function to show InfoWindow in marker
     self.showInfoWindow = function() {};
 }
@@ -118,7 +120,7 @@ ko.bindingHandlers.map = {
                         position: p().location(),
                         map: map,
                         title: p().name(),
-                        icon: p().iconImage,
+                        icon: p().mapIconImage(),
                         labelContent: p().label(),
                         labelAnchor: new google.maps.Point(3, -20),
                         labelClass: "labels",
