@@ -47,8 +47,6 @@ function PointOfInterest(data) {
     // Reference to the function to show InfoWindow in marker
     self.showInfoWindow = function() {};
 }
-// Set a generic category
-PointOfInterest.prototype.category = "Place";
 PointOfInterest.prototype.fetchDetails = function () {
     var self = this;
     if (!self.detailsValid) {
@@ -74,8 +72,6 @@ function School(data) {
 School.prototype = Object.create(PointOfInterest.prototype);
 // Assign a School template
 School.prototype.infoWindowTemplateId = 'school-info-window-template';
-// Assign School category
-School.prototype.category = "Schools";
 
 // Constructor for Restaurants
 function Restaurant(data) {
@@ -85,7 +81,6 @@ function Restaurant(data) {
 }
 Restaurant.prototype = Object.create(PointOfInterest.prototype);
 Restaurant.prototype.infoWindowTemplateId = 'restaurant-info-window-template';
-Restaurant.prototype.category = "Restaurants";
 
 // Constructor for Transport
 function Transport(data) {
@@ -94,8 +89,6 @@ function Transport(data) {
 }
 Transport.prototype = Object.create(PointOfInterest.prototype);
 Transport.prototype.infoWindowTemplateId = 'transport-info-window-template';
-Transport.prototype.category = "Transport";
-
 
 // Constructor for Wikipedia articles
 function WikiArticle(item) {
