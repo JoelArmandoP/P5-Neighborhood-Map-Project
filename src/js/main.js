@@ -2,7 +2,7 @@
 
 // Google places service
 var placesService = null;
-var mapsGeocoder = null; 
+var mapsGeocoder = null;
 
 // We may be doing too many requests in one go.
 // Wrapper function to retry API call with exponential back-off on specific status.
@@ -12,7 +12,7 @@ function callApiWithRetry(apiFunction, request, callback, retryOn) {
     var timeout = 300;
     var f = function (result, status) {
         if (status == retryOn && attempt++ < maxAttempts) {
-            setTimeout(function() { apiFunction(request, f); }, timeout);
+            setTimeout(function () { apiFunction(request, f); }, timeout);
             timeout *= 2;
         } else {
             if (status == retryOn) {
@@ -39,14 +39,14 @@ function PointOfInterest(data) {
     // Use icon from Places service
     self.mapIconImage = ko.computed(function () {
         return {
-            url: self.mapIconImageUrl(), // url
-            scaledSize: new google.maps.Size(20, 20), // scale size
-            origin: new google.maps.Point(0,0), // origin
-            anchor: new google.maps.Point(0,0),// anchor 
+            url: self.mapIconImageUrl(),
+            scaledSize: new google.maps.Size(20, 20),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(0, 0)
         };
-    })
+    });
     // Reference to the function to show InfoWindow in marker
-    self.showInfoWindow = function() {};
+    self.showInfoWindow = function () {};
 }
 // If details haven been fetched yet, call Places API to replace Place Search Results object in self.data() with Place Details Result object.
 PointOfInterest.prototype.fetchDetails = function () {
@@ -56,7 +56,7 @@ PointOfInterest.prototype.fetchDetails = function () {
             placesService.getDetails.bind(placesService), {
                 placeId: self.data().place_id
             },
-            function(result, status) {
+            function (result, status) {
                 if (status == google.maps.places.PlacesServiceStatus.OK) {
                     self.data(result);
                 }
@@ -79,7 +79,7 @@ School.prototype.infoWindowTemplateId = 'school-info-window-template';
 function Restaurant(data) {
     var self = this;
     PointOfInterest.call(self, data);
-    self.rating = ko.computed(function() { return 'rating' in self.data() ? self.data().rating : 'none'; });
+    self.rating = ko.computed(function () { return 'rating' in self.data() ? self.data().rating : 'none'; });
 }
 Restaurant.prototype = Object.create(PointOfInterest.prototype);
 Restaurant.prototype.infoWindowTemplateId = 'restaurant-info-window-template';
@@ -126,8 +126,8 @@ ko.bindingHandlers.map = {
         map.neighborhoodMapInfoWindow = null;
 
         // create markers for each place in the selectedPlaces observable.
-        viewModel.categories().forEach(function(k) {
-            viewModel.selectedPlaces()[k]().forEach(function(p) {
+        viewModel.categories().forEach(function (k) {
+            viewModel.selectedPlaces()[k]().forEach(function (p) {
                 // Create the marker in the map
                 if('lat' in p().location()) {
                     var marker = new MarkerWithLabel({
@@ -146,9 +146,9 @@ ko.bindingHandlers.map = {
                     var infoWindow = new google.maps.InfoWindow({
                         content: content
                     });
-                    
+
                     // Create function to open infoWindow on demand
-                    p().showInfoWindow = function() {
+                    p().showInfoWindow = function () {
                         if (map.neighborhoodMapInfoWindow && map.neighborhoodMapInfoWindow.getMap()) {
                             map.neighborhoodMapInfoWindow.close();
                         }
@@ -158,13 +158,13 @@ ko.bindingHandlers.map = {
 
                         //Animate the marker
                         marker.setAnimation(google.maps.Animation.BOUNCE);
-                        setTimeout(function() {marker.setAnimation(null)},800);
+                        setTimeout(function () { marker.setAnimation(null); }, 800);
                     };
 
                     // Configure marker to open infoWindow on click
                     google.maps.event.addListener(marker, 'click', p().showInfoWindow);
                 }
-            })
+            });
         });
     }
 };
@@ -207,7 +207,7 @@ var ViewModel = function () {
                 radius: 1500,
                 types: placeTypes[category].types
             },
-            function(results, status) {
+            function (results, status) {
                 if (status == google.maps.places.PlacesServiceStatus.OK) {
                     var count = 0;
                     results.forEach(function (placeData) {
@@ -231,15 +231,15 @@ var ViewModel = function () {
 
     // Places by category filtered by self.filter
     self.selectedPlaces = ko.observable({});
-    self.categories().forEach(function(k) {
-        self.selectedPlaces()[k] = ko.computed(function() {
+    self.categories().forEach(function (k) {
+        self.selectedPlaces()[k] = ko.computed(function () {
             var filter = self.filter().toLowerCase();
-            return ko.utils.arrayFilter(self.places()[k](), function(p) {
+            return ko.utils.arrayFilter(self.places()[k](), function (p) {
                 return p().name().toLowerCase().indexOf(filter) >= 0;
             });
-        })
+        });
     });
- 
+
     // Array of Wikipedia articles
     self.wikiArticles = ko.observableArray([]);
     var maxArticles = 3;
@@ -249,8 +249,8 @@ var ViewModel = function () {
     $.ajax(wikiUrl, {
         dataType: 'jsonp',
         headers: { 'Api-User-Agent': 'Joels Udacity Test Page/1.0' },
-        success: function(data, textStatus, jqXHR) {
-            $.each(data.query.search, function(index, item) {
+        success: function (data, textStatus, jqXHR) {
+            $.each(data.query.search, function (index, item) {
                 if (self.wikiArticles().length < maxArticles) {
                     self.wikiArticles.push(ko.observable(new WikiArticle(item)));
                 }
@@ -266,17 +266,15 @@ var ViewModel = function () {
     //Do the query to The Guardian
     $.ajax(theGuardianUrl, {
         dataType: 'jsonp',
-        success: function(data, textStatus, jqXHR) {
-            $.each(data.response.results, function(index, item) {
+        success: function (data, textStatus, jqXHR) {
+            $.each(data.response.results, function (index, item) {
                 if (self.theGuardianArticles().length < maxArticles) {
-                    self.theGuardianArticles.push(ko.observable(new theGuardianArticle(item)));    
+                    self.theGuardianArticles.push(ko.observable(new theGuardianArticle(item)));
                 }
-            })
+            });
         }
-
-    })
-
-}
+    });
+};
 
 // Get the page running!
 window.addEventListener('load', function () {
@@ -291,7 +289,7 @@ window.addEventListener('load', function () {
         'padding': 256,
         'tolerance': 70
     });
-    $('#toggle-button').click(function() {
+    $('#toggle-button').click(function () {
         slideout.toggle();
     });
 });
