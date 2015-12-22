@@ -8,3 +8,7 @@ Joel Armando
 # How to run the application:
 
 Download the repository and load dist/index.html to run the application
+
+Click on markers to display detailed info on points of interest.
+Hamburger menu will display clickable list of points of interest.
+Enter text into search bar to filter points of interest by name.
