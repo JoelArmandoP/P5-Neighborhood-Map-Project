@@ -67,8 +67,12 @@
 		        <div class="col-md-9">
 		            <div class="wikipedia-container news-container">
 		                <h3 id="wiki-header"> About Balham</h3>
+         	            <div data-bind="if: wikiError">
+	         	            <div class="error-message" data-bind="text: wikiError">
+			                </div>
+		                </div>
 		                <ul id="wikipedia-links"  data-bind="foreach: wikiArticles">
-		                    <li>
+                    		<li>
 		                        <h5 id="wiki-article-title" data-bind="text:title"></h5>
 		                        <span id="wiki-snippet" data-bind="text:snippet"></span>
 		                        <span class="url"><a data-bind="attr: { href: url }, text: url"></a></span>
@@ -79,6 +83,10 @@
 		        <div class="col-md-3">
 		            <div class="theGuardian-container news-container">
 		                <h3 id="News-header">Balham in the news</h3>
+         	            <div data-bind="if: guardianError">
+	         	            <div class="error-message" data-bind="text: guardianError">
+			                </div>
+		                </div>
 		                <ul id="News-links"  data-bind="foreach: theGuardianArticles">
 		                    <li>
 		                        <h5 class="url"><a data-bind="attr: { href: url }, text: title"></a></h5>
