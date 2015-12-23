@@ -245,6 +245,12 @@ var ViewModel = function () {
     var maxArticles = 3;
     // End point for Wikipedia
     var wikiUrl = 'https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=Balham,London&prop=revisions&rvprop=content&srlimit=5&format=json';
+    // Error message from Wikipedia access attempt
+    self.wikiError = ko.observable('');
+    // A setTimeout() that the successful call cancels
+    var wikiRequestTimeout = setTimeout(function() {
+        self.wikiError('Failed to get Wikipedia resources');
+    }, 8000);
     // Do the query to Wikipedia
     $.ajax(wikiUrl, {
         dataType: 'jsonp',
@@ -255,14 +261,19 @@ var ViewModel = function () {
                     self.wikiArticles.push(ko.observable(new WikiArticle(item)));
                 }
             });
+            clearTimeout(wikiRequestTimeout);
         }
     });
     // Array of The Guardian articles
     self.theGuardianArticles = ko.observableArray([]);
-
     // Array of The Guardian articles
     var theGuardianUrl = 'http://content.guardianapis.com/search?q=Balham%2C%20London&api-key=5fsppuexyp2szbq8cyvx8vtq';
-
+    // Error message from The Guardian access attempt
+    self.guardianError = ko.observable('');
+    // A setTimeout() that the successful call cancels
+    var theGuardianRequestTimeout = setTimeout(function() {
+        self.guardianError('Failed to get news from The Guardian');
+    }, 8000);
     //Do the query to The Guardian
     $.ajax(theGuardianUrl, {
         dataType: 'jsonp',
@@ -272,6 +283,7 @@ var ViewModel = function () {
                     self.theGuardianArticles.push(ko.observable(new theGuardianArticle(item)));
                 }
             });
+            clearTimeout(theGuardianRequestTimeout);
         }
     });
 };
