@@ -6,7 +6,7 @@ grunt.initConfig({
 		options:{
 		    cssmin: true
 		},
-		src: 'src/index.html',
+		src: 'dist/index.html',
 		dest: 'dist/index.html'
 		}
 	},
@@ -53,6 +53,6 @@ grunt.initConfig({
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
-    grunt.registerTask('default', ['inline', 'uglify','cssmin', 'htmlmin']);
+    grunt.registerTask('default', ['cssmin', 'uglify', 'htmlmin', 'inline']);
 }
- 
+
