@@ -286,12 +286,15 @@ var ViewModel = function () {
             clearTimeout(theGuardianRequestTimeout);
         }
     });
+
 };
 
 // Get the page running!
 window.addEventListener('load', function () {
     placesService = new google.maps.places.PlacesService(document.getElementById('places-attribution'));
     mapsGeocoder = new google.maps.Geocoder();
+    function googleSuccess() {}; 
+    function googleError() {};
     ko.applyBindings(new ViewModel(), document.getElementById('container'));
     // Create slideout menu
     var slideout = new Slideout({
