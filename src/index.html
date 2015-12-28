@@ -5,15 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Oswald:400,700' rel='stylesheet' type='text/css'>
-    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js'></script>
-    <script> var googleSuccess = function() {}; var googleError = function() {}</script>
-    <script type="text/javascript " src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFoI4Tv2fTEgRhBSWn9UtWsJX2_J2-DLg&libraries=places&callback=googleSuccess&onerror='googleError()'"></script>
-    <script src="https://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerwithlabel/src/markerwithlabel.js"></script>
-    <script src="js/main.js"></script> 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/slideout/0.1.11/slideout.min.js"></script>
      <!-- Inline CSS using grunt-->
     <link href="css/style.css?__inline=true" rel="stylesheet">
     <title>Living in Balham</title>
@@ -58,6 +50,7 @@
 		    <div class="row center-content clearfix">
 		        <div class="col-md-12"> 
 				    <div class="map" data-bind="map: location">
+				    	<div class="error-message">Google Maps not accessible</div>	
 		        	</div>
 		            <div id="places-attribution">
 		            </div>
@@ -113,5 +106,13 @@
             <div><span class="data-label maki-bus">&nbsp</span><span class="name" data-bind="text: name"></span></div>
         </div>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js'></script>
+    <script async src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script> var googleSuccess = function() {};</script>
+    <script async type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFoI4Tv2fTEgRhBSWn9UtWsJX2_J2-DLg&libraries=places&callback=googleSuccess"></script>
+    <script async src="https://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerwithlabel/src/markerwithlabel.js"></script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/slideout/0.1.11/slideout.min.js"></script>
+    <script async src="js/main.js"></script> 
 </body>
 </html>

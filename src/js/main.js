@@ -111,6 +111,7 @@ function theGuardianArticle(item) {
 
 
 // Custom binding for maps.
+function setUpMapDataBinding() {
 ko.bindingHandlers.map = {
     update: function (elem, valueAccesor, allBindingsAccesor, viewModel) {
         var location = ko.utils.unwrapObservable(valueAccesor());
@@ -167,6 +168,7 @@ ko.bindingHandlers.map = {
             });
         });
     }
+}
 };
 
 var ViewModel = function () {
@@ -197,30 +199,32 @@ var ViewModel = function () {
 
     // Create places as a map from category to ko.observableArray of PointOfInterest
     var places = {};
-    var placesPerCategory = 10;
-    Object.keys(placeTypes).forEach(function (category) {
-        places[category] = ko.observableArray([]);
-        var constructor = placeTypes[category].constructor;
-        callApiWithRetry(
-            placesService.nearbySearch.bind(placesService), {
-                location: { lat: self.location().lat(), lng: self.location().lng() },
-                radius: 1500,
-                types: placeTypes[category].types
-            },
-            function (results, status) {
-                if (status == google.maps.places.PlacesServiceStatus.OK) {
-                    var count = 0;
-                    results.forEach(function (placeData) {
-                        if (count < placesPerCategory) {
-                            var place = new constructor(placeData);
-                            place.label(labels[count++ % labels.length]);
-                            places[category].push(new ko.observable(place));
-                        }
-                    });
-                }
-            },
-            google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT);
-    });
+    if (placesService) {
+        var placesPerCategory = 10;
+        Object.keys(placeTypes).forEach(function (category) {
+            places[category] = ko.observableArray([]);
+            var constructor = placeTypes[category].constructor;
+            callApiWithRetry(
+                placesService.nearbySearch.bind(placesService), {
+                    location: { lat: self.location().lat(), lng: self.location().lng() },
+                    radius: 1500,
+                    types: placeTypes[category].types
+                },
+                function (results, status) {
+                    if (status == google.maps.places.PlacesServiceStatus.OK) {
+                        var count = 0;
+                        results.forEach(function (placeData) {
+                            if (count < placesPerCategory) {
+                                var place = new constructor(placeData);
+                                place.label(labels[count++ % labels.length]);
+                                places[category].push(new ko.observable(place));
+                            }
+                        });
+                    }
+                },
+                google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT);
+        });
+    }
     self.places = ko.observable(places);
 
     // Alphabetically sorted list of all categories found.
@@ -291,20 +295,25 @@ var ViewModel = function () {
 
 // Get the page running!
 window.addEventListener('load', function () {
-    placesService = new google.maps.places.PlacesService(document.getElementById('places-attribution'));
-    mapsGeocoder = new google.maps.Geocoder();
-    function googleSuccess() {}; 
-    function googleError() {};
-    ko.applyBindings(new ViewModel(), document.getElementById('container'));
+    if (typeof google !== 'undefined') {
+        placesService = new google.maps.places.PlacesService(document.getElementById('places-attribution'));
+        mapsGeocoder = new google.maps.Geocoder();
+        setUpMapDataBinding();
+    }
+    if (typeof ko !== 'undefined') {
+        ko.applyBindings(new ViewModel(), document.getElementById('container'));
+    }
     // Create slideout menu
-    var slideout = new Slideout({
-        'panel': document.getElementById('panel'),
-        'menu': document.getElementById('menu'),
-        'side': 'left',
-        'padding': 256,
-        'tolerance': 70
-    });
-    $('#toggle-button').click(function () {
-        slideout.toggle();
-    });
+    if (typeof Slideout !== 'undefined') {
+        var slideout = new Slideout({
+            'panel': document.getElementById('panel'),
+            'menu': document.getElementById('menu'),
+            'side': 'left',
+            'padding': 256,
+            'tolerance': 70
+        });
+        $('#toggle-button').click(function () {
+            slideout.toggle();
+        });
+    }
 });
