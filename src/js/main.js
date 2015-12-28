@@ -295,6 +295,7 @@ var ViewModel = function () {
 
 // Get the page running!
 window.addEventListener('load', function () {
+    // Create Google Maps service if script was loaded
     if (typeof google !== 'undefined') {
         placesService = new google.maps.places.PlacesService(document.getElementById('places-attribution'));
         mapsGeocoder = new google.maps.Geocoder();
@@ -303,7 +304,7 @@ window.addEventListener('load', function () {
     if (typeof ko !== 'undefined') {
         ko.applyBindings(new ViewModel(), document.getElementById('container'));
     }
-    // Create slideout menu
+    // Create slideout menu if script was loaded
     if (typeof Slideout !== 'undefined') {
         var slideout = new Slideout({
             'panel': document.getElementById('panel'),
